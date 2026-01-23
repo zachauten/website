@@ -1,0 +1,277 @@
+---
+export const prerender = true;
+
+import { Image } from "astro:assets";
+import dannyNowellPhoto from "../assets/endorsements/danny-nowell.jpg";
+import natalieBentKitaifPhoto from "../assets/endorsements/natalie-bent-kitaif.jpg";
+import nateBakerPhoto from "../assets/endorsements/nate-baker.jpg";
+import Layout from "../layouts/Layout.astro";
+
+const endorsedCandidates = [
+  {
+    name: "Nate Baker",
+    office: "Durham City Council",
+    image: nateBakerPhoto,
+    imageAlt: "Nate Baker campaign photo",
+    summary:
+      "Nate is a Durham-born urban planner and longtime Planning Commission member who centers community-driven development and public engagement, with a focus on walkability, transit-oriented planning, worker and tenant power, and environmental protection through equitable growth.",
+  },
+  {
+    name: "Danny Nowell",
+    office: "Carrboro Town Council",
+    image: dannyNowellPhoto,
+    imageAlt: "Danny Nowell campaign photo",
+    summary:
+      "Danny is running for re-election to continue Carrboro's progressive momentum with experienced local leadership, emphasizing expanded housing supply, improved connectivity and mobility, and a reimagined approach to public safety.",
+  },
+  {
+    name: "Natalie Bent Kitaif",
+    office: "Durham Board of Education, District 1",
+    image: natalieBentKitaifPhoto,
+    imageAlt: "Natalie Bent Kitaif with her family in campaign photo",
+    summary:
+      "Natalie is focused on restoring trust, safety, and integrity in Durham Public Schools through accountable public leadership, prioritizing fair pay and support for school staff, transparent and stable governance, and safe student-centered school communities.",
+  },
+];
+---
+
+<Layout
+  title="Endorsements - North Carolina DSA"
+  description="Learn about NC Triangle DSA's currently endorsed candidates and how to seek chapter endorsement."
+>
+  <main id="main-content">
+    <section class="section">
+      <div class="container">
+        <h2 class="section-heading">Currently Endorsed</h2>
+
+        <div class="endorsee-list">
+          {endorsedCandidates.map((candidate) => {
+            const isPortrait = candidate.image.height > candidate.image.width;
+
+            return (
+              <article
+                class:list={[
+                  "endorsee-row",
+                  { "endorsee-row--portrait": isPortrait },
+                ]}
+              >
+                <div
+                  class:list={[
+                    "endorsee-media",
+                    { "endorsee-media--portrait": isPortrait },
+                  ]}
+                >
+                  <Image
+                    src={candidate.image}
+                    alt={candidate.imageAlt}
+                    loading="lazy"
+                    class="endorsee-image"
+                    width={isPortrait ? 180 : 280}
+                    sizes={isPortrait
+                    ? "(max-width: 768px) 180px, 180px"
+                    : "(max-width: 768px) 100vw, 280px"}
+                  />
+                </div>
+
+                <div class="endorsee-content">
+                  <h3>{candidate.name}</h3>
+                  <p class="endorsee-office">{candidate.office}</p>
+                  <p>{candidate.summary}</p>
+                </div>
+              </article>
+            );
+          })}
+        </div>
+      </div>
+    </section>
+
+    <section class="section bg-light">
+      <div class="container container--narrow">
+        <h2 class="section-heading">Seeking Endorsement?</h2>
+        <p>
+          NC Triangle DSA backs candidates who treat elected office as an
+          organizing tool, not a personal brand. We are looking for candidates
+          who can build and sustain working-class power in coalition with labor,
+          tenants, and community organizations.
+        </p>
+        <p>
+          Our chapter expects endorsed candidates to publicly identify as
+          socialist or democratic socialist, maintain membership in both our
+          chapter and National DSA, and show visible campaign affiliation with
+          NC Triangle DSA.
+        </p>
+        <p>
+          We also evaluate campaign strategy and accountability: your path to
+          victory, field and fundraising plan, policy commitments, and your
+          willingness to work with the chapter during the race and while in
+          office.
+        </p>
+
+        <div class="candidate-notes">
+          <h3>What we look for in aspiring endorsees</h3>
+          <ul>
+            <li>
+              A clear socialist analysis and a concrete plan to mobilize
+              working-class voters.
+            </li>
+            <li>
+              Public commitments on labor, housing justice, climate,
+              anti-carceral policy, immigrant justice, and civil rights.
+            </li>
+            <li>
+              Alignment with chapter and national BDS and anti-zionist
+              resolutions.
+            </li>
+            <li>
+              A commitment to shared movement work, including collaboration with
+              other chapter-endorsed candidates and regular chapter check-ins if
+              elected.
+            </li>
+          </ul>
+        </div>
+
+        <a
+          href="https://forms.gle/REPLACE_ME"
+          class="questionnaire-link"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Submit Endorsement Questionnaire
+        </a>
+      </div>
+    </section>
+  </main>
+</Layout>
+
+<style>
+.page-hero {
+  background: linear-gradient(
+    160deg,
+    var(--gray-700) 0%,
+    var(--gray-900) 60%,
+    var(--black-rich) 100%
+  );
+  color: var(--white);
+  padding: var(--space-3xl) 0;
+  text-align: center;
+}
+
+.section-heading::after {
+  background: var(--gray-700);
+}
+
+.page-hero h1 {
+  color: var(--white);
+}
+
+.page-hero-sub {
+  color: rgba(255, 255, 255, 0.92);
+  margin: 0 auto;
+}
+
+.endorsee-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xl);
+}
+
+.endorsee-row {
+  display: flex;
+  gap: var(--space-xl);
+  align-items: flex-start;
+  background: var(--white);
+  border: 1px solid var(--gray-200);
+  padding: var(--space-lg);
+  box-shadow: var(--shadow-sm);
+}
+
+.endorsee-media {
+  flex: 0 0 auto;
+  width: 280px;
+}
+
+.endorsee-media--portrait {
+  width: 180px;
+}
+
+.endorsee-image {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.endorsee-content {
+  flex: 1;
+}
+
+.endorsee-office {
+  font-size: var(--text-sm);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  margin-bottom: var(--space-md);
+}
+
+.candidate-notes {
+  margin: var(--space-xl) 0;
+  background: var(--white);
+  padding: var(--space-lg);
+  border: 1px solid var(--gray-200);
+  border-left: 1px solid var(--gray-200);
+  box-shadow: var(--shadow-sm);
+}
+
+.candidate-notes ul {
+  padding-left: 1.25rem;
+}
+
+.candidate-notes li {
+  margin-bottom: var(--space-sm);
+}
+
+.questionnaire-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-sm) var(--space-xl);
+  font-family: var(--font-display);
+  font-size: var(--text-lg);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  background: var(--gray-900);
+  color: var(--white);
+  text-decoration: none;
+}
+
+.questionnaire-link:hover {
+  color: var(--white);
+  background: var(--black-rich);
+  text-decoration: none;
+}
+
+@media (max-width: 768px) {
+  .page-hero {
+    padding: var(--space-2xl) 0;
+  }
+
+  .endorsee-row {
+    flex-direction: column;
+  }
+
+  .endorsee-row--portrait {
+    flex-direction: row;
+    align-items: flex-start;
+  }
+
+  .endorsee-media {
+    width: 100%;
+    max-width: 420px;
+  }
+
+  .endorsee-media--portrait {
+    width: 140px;
+    max-width: 140px;
+  }
+}
+</style>
