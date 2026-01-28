@@ -1,0 +1,221 @@
+---
+import ICAL from "ical.js";
+import EventCard from "../components/EventCard.astro";
+import Footer from "../components/Footer.astro";
+import Header from "../components/Header.astro";
+import Layout from "../layouts/Layout.astro";
+
+// Google Calendar iCal feed for dsa.chapelboro@gmail.com
+const ICAL_FEED_URL =
+  "https://calendar.google.com/calendar/ical/dsa.chapelboro%40gmail.com/public/basic.ics";
+
+interface CalendarEvent {
+  title: string;
+  start: Date;
+  end?: Date;
+  location?: string;
+  description?: string;
+}
+
+let events: CalendarEvent[] = [];
+let fetchError = false;
+
+try {
+  // Fetch and parse the iCal feed using ical.js
+  const response = await fetch(ICAL_FEED_URL);
+  const icalData = await response.text();
+
+  const jcalData = ICAL.parse(icalData);
+  const comp = new ICAL.Component(jcalData);
+  const vevents = comp.getAllSubcomponents("vevent");
+
+  const now = new Date();
+
+  // Extract events from parsed data
+  for (const vevent of vevents) {
+    const event = new ICAL.Event(vevent);
+    const startDate = event.startDate?.toJSDate();
+
+    // Only include future events
+    if (startDate && startDate >= now) {
+      events.push({
+        title: event.summary || "Untitled Event",
+        start: startDate,
+        end: event.endDate?.toJSDate(),
+        location: event.location || undefined,
+        description: event.description || undefined,
+      });
+    }
+  }
+
+  // Sort events by start date
+  events.sort((a, b) => a.start.getTime() - b.start.getTime());
+
+  console.log(`Successfully parsed ${events.length} upcoming events`);
+} catch (error) {
+  console.error("Error fetching calendar:", error);
+  fetchError = true;
+}
+---
+
+<Layout
+  title="Calendar - North Carolina DSA"
+  description="Upcoming events, meetings, and actions from the North Carolina Democratic Socialists of America"
+>
+  <Header />
+
+  <main>
+    <section class="hero-small">
+      <div class="container">
+        <h1>Upcoming Events</h1>
+        <p>Join us for meetings, actions, social events, and more!</p>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        {fetchError && (
+          <div class="notice">
+            <p>
+              <strong>Note:</strong> Currently showing sample events. To connect
+              a real calendar, update the <code>ICAL_FEED_URL</code> in <code
+              >src/pages/calendar.astro</code> with your iCal feed URL.
+            </p>
+          </div>
+        )}
+
+        {events.length === 0 ? (
+          <div class="no-events">
+            <p>
+              No upcoming events at this time. Check back soon or follow us on
+              social media for announcements!
+            </p>
+          </div>
+        ) : (
+           <div class="events-list">
+             {events.map(event => <EventCard {...event} />)}
+           </div>
+         )}
+
+        <div class="calendar-info">
+          <h2>Stay Updated</h2>
+          <p>Don't miss an event! Here are ways to stay in the loop:</p>
+          <ul>
+            <li>📧 <a href="#contact">Sign up for our email list</a></li>
+            <li>
+              🐦 Follow us on <a
+                href="https://twitter.com/ncdsa"
+                target="_blank"
+                rel="noopener"
+              >Twitter</a>
+            </li>
+            <li>
+              📘 Like us on <a
+                href="https://www.facebook.com/ncdsa"
+                target="_blank"
+                rel="noopener"
+              >Facebook</a>
+            </li>
+            <li>📅 Subscribe to our calendar (coming soon)</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <Footer />
+</Layout>
+
+<style>
+.hero-small {
+  background: linear-gradient(
+    135deg,
+    var(--red-primary) 0%,
+    var(--red-dark) 100%
+  );
+  color: var(--white);
+  padding: 4rem 0 3rem;
+  text-align: center;
+}
+
+.hero-small h1 {
+  font-size: 2.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.hero-small p {
+  font-size: 1.25rem;
+  opacity: 0.95;
+}
+
+.section {
+  padding: 4rem 0;
+}
+
+.container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+.notice {
+  background: #fff3cd;
+  border: 1px solid #ffc107;
+  border-radius: 8px;
+  padding: 1rem 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.notice code {
+  background: #ffffff;
+  padding: 2px 6px;
+  border-radius: 3px;
+  font-size: 0.9em;
+}
+
+.no-events {
+  text-align: center;
+  padding: 3rem 0;
+  color: var(--gray-medium);
+}
+
+.events-list {
+  margin-bottom: 3rem;
+}
+
+.calendar-info {
+  background: var(--gray-light);
+  padding: 2rem;
+  border-radius: 8px;
+  margin-top: 3rem;
+}
+
+.calendar-info h2 {
+  color: var(--red-primary);
+  margin-bottom: 1rem;
+}
+
+.calendar-info ul {
+  margin-top: 1rem;
+  padding-left: 1.5rem;
+}
+
+.calendar-info li {
+  margin: 0.75rem 0;
+  font-size: 1.1rem;
+}
+
+@media (max-width: 768px) {
+  .hero-small {
+    padding: 3rem 0 2rem;
+  }
+
+  .hero-small h1 {
+    font-size: 2rem;
+  }
+
+  .section {
+    padding: 2rem 0;
+  }
+}
+</style>

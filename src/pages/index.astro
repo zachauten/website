@@ -1,11 +1,338 @@
 ---
-import Welcome from '../components/Welcome.astro';
-import Layout from '../layouts/Layout.astro';
-
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+import Footer from "../components/Footer.astro";
+import Header from "../components/Header.astro";
+import Hero from "../components/Hero.astro";
+import Layout from "../layouts/Layout.astro";
 ---
 
-<Layout>
-	<Welcome />
+<Layout title="North Carolina DSA - Democratic Socialists of America">
+  <Header />
+  <Hero />
+
+  <main>
+    <!-- About Section -->
+    <section id="about" class="section">
+      <div class="container">
+        <h2>About North Carolina DSA</h2>
+        <p>
+          The Democratic Socialists of America (DSA) is the largest socialist
+          organization in the United States. Our North Carolina chapter is
+          committed to building a more just, equitable, and democratic society
+          across the Tar Heel State.
+        </p>
+        <p>
+          We believe that both the economy and society should be run
+          democratically to meet human needs, not to make profits for a few. We
+          are a political and activist organization, not a party; through campus
+          and community-based chapters, DSA members use a variety of tactics,
+          from legislative to direct action, to fight for reforms that empower
+          working people.
+        </p>
+      </div>
+    </section>
+
+    <section class="section bg-light">
+      <div class="container">
+        <h2>Our Program</h2>
+        <div class="values-grid">
+          <div class="value-card">
+            <h3>🏥 Medicare for All</h3>
+            <p>
+              Universal, single-payer healthcare as a human right for all North
+              Carolinians.
+            </p>
+          </div>
+          <div class="value-card">
+            <h3>🏠 Housing Justice</h3>
+            <p>
+              Affordable housing, strong tenant protections, and an end to
+              displacement.
+            </p>
+          </div>
+          <div class="value-card">
+            <h3>🌱 Green New Deal</h3>
+            <p>
+              A just transition to renewable energy and good-paying green jobs.
+            </p>
+          </div>
+          <div class="value-card">
+            <h3>⚖️ Racial Justice</h3>
+            <p>
+              Fighting systemic racism and building an anti-racist, multiracial
+              democracy.
+            </p>
+          </div>
+          <div class="value-card">
+            <h3>💼 Worker Power</h3>
+            <p>
+              Strong unions, living wages, and democratic control of the
+              workplace.
+            </p>
+          </div>
+          <div class="value-card">
+            <h3>🎓 Education for All</h3>
+            <p>
+              Free public education from pre-K through college and cancellation
+              of student debt.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Campaigns Section -->
+    <section id="campaigns" class="section">
+      <div class="container">
+        <h2>Our Campaigns</h2>
+        <div class="campaigns-grid">
+          <div class="campaign-card">
+            <h3>Medicare for All</h3>
+            <p>
+              We're organizing across North Carolina to win universal
+              healthcare. Join us in phonebanking, canvassing, and putting
+              pressure on elected officials to support single-payer healthcare.
+            </p>
+          </div>
+          <div class="campaign-card">
+            <h3>Tenant Organizing</h3>
+            <p>
+              Fighting for tenant rights, rent control, and affordable housing
+              in our communities. We support tenant unions and organize against
+              predatory landlords.
+            </p>
+          </div>
+          <div class="campaign-card">
+            <h3>Labor Solidarity</h3>
+            <p>
+              Standing with workers on picket lines, supporting union drives,
+              and fighting for better wages and working conditions across North
+              Carolina.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Join Section -->
+    <section id="join" class="section bg-red">
+      <div class="container">
+        <h2>Join North Carolina DSA</h2>
+        <p class="join-text">
+          Ready to fight for a better North Carolina? Becoming a member of DSA
+          means joining thousands of socialists across the country working to
+          transform our society. Your membership dues support our organizing
+          work and help build the socialist movement.
+        </p>
+        <div class="join-buttons">
+          <a
+            href="https://dsausa.org/join"
+            class="button join-button"
+            target="_blank"
+            rel="noopener"
+          >Join DSA</a>
+          <a href="#contact" class="button contact-button"
+          >Contact NC Chapter</a>
+        </div>
+        <p class="dues-info">
+          Dues start at $5/month. No one is turned away for lack of funds.
+        </p>
+      </div>
+    </section>
+
+    <!-- Events Section -->
+    <section id="events" class="section">
+      <div class="container">
+        <h2>Upcoming Events</h2>
+        <p>
+          Join us for meetings, actions, social events, and more! Check out our
+          <a href="/calendar">full events calendar</a> to see what's happening.
+        </p>
+        <div style="text-align: center; margin-top: 2rem">
+          <a
+            href="/calendar"
+            class="button"
+            style="background: var(--red-primary); color: var(--white); padding: 1rem 2rem; border-radius: 4px; font-weight: 600; display: inline-block"
+          >View Calendar</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="section bg-light">
+      <div class="container">
+        <h2>Get Involved</h2>
+        <p>
+          Want to learn more or get involved with North Carolina DSA? We'd love
+          to hear from you!
+        </p>
+        <ul class="contact-list">
+          <li>
+            📧 Email us at: <a href="mailto:contact@ncdsa.org"
+            >contact@ncdsa.org</a>
+          </li>
+          <li>
+            🐦 Follow us on Twitter: <a
+              href="https://twitter.com/ncdsa"
+              target="_blank"
+              rel="noopener"
+            >@ncdsa</a>
+          </li>
+          <li>
+            📘 Like us on Facebook: <a
+              href="https://www.facebook.com/ncdsa"
+              target="_blank"
+              rel="noopener"
+            >NC DSA</a>
+          </li>
+          <li>
+            📸 Follow us on Instagram: <a
+              href="https://www.instagram.com/ncdsa"
+              target="_blank"
+              rel="noopener"
+            >@ncdsa</a>
+          </li>
+        </ul>
+      </div>
+    </section>
+  </main>
+
+  <Footer />
 </Layout>
+
+<style>
+main {
+  min-height: 100vh;
+}
+
+.section {
+  padding: 4rem 0;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+.bg-light {
+  background: var(--gray-light);
+}
+
+.bg-red {
+  background: var(--red-primary);
+  color: var(--white);
+}
+
+.bg-red h2 {
+  color: var(--white);
+}
+
+.values-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
+.value-card {
+  padding: 1.5rem;
+  background: var(--white);
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.value-card h3 {
+  color: var(--red-primary);
+  margin-bottom: 0.5rem;
+}
+
+.campaigns-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
+.campaign-card {
+  padding: 2rem;
+  border-left: 4px solid var(--red-primary);
+  background: var(--gray-light);
+}
+
+.campaign-card h3 {
+  color: var(--red-primary);
+  margin-bottom: 1rem;
+}
+
+.join-text {
+  font-size: 1.1rem;
+  margin-bottom: 2rem;
+  max-width: 800px;
+}
+
+.join-buttons {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.join-button {
+  background: var(--white);
+  color: var(--red-primary);
+  padding: 1rem 2rem;
+  border-radius: 4px;
+  font-weight: 600;
+  transition: all 0.3s;
+}
+
+.join-button:hover {
+  background: var(--gray-light);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  text-decoration: none;
+}
+
+.contact-button {
+  background: transparent;
+  color: var(--white);
+  border: 2px solid var(--white);
+  padding: 1rem 2rem;
+  border-radius: 4px;
+  font-weight: 600;
+  transition: all 0.3s;
+}
+
+.contact-button:hover {
+  background: var(--white);
+  color: var(--red-primary);
+  text-decoration: none;
+  transform: translateY(-2px);
+}
+
+.dues-info {
+  font-style: italic;
+  opacity: 0.9;
+}
+
+.contact-list {
+  list-style: none;
+  margin-top: 1.5rem;
+}
+
+.contact-list li {
+  margin-bottom: 1rem;
+  font-size: 1.1rem;
+}
+
+@media (max-width: 768px) {
+  .section {
+    padding: 2rem 0;
+  }
+
+  .values-grid,
+  .campaigns-grid {
+    grid-template-columns: 1fr;
+  }
+}
+</style>

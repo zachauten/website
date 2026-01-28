@@ -1,0 +1,124 @@
+---
+
+---
+
+<footer>
+  <div class="container">
+    <div class="footer-content">
+      <div class="footer-section">
+        <h3>North Carolina Triangle DSA</h3>
+        <p>Building a democratic, socialist future in the Tar Heel State</p>
+      </div>
+      <div class="footer-section">
+        <h4>Quick Links</h4>
+        <ul>
+          <li><a href="#about">About</a></li>
+          <li><a href="#campaigns">Campaigns</a></li>
+          <li><a href="#events">Events</a></li>
+          <li><a href="#join">Join DSA</a></li>
+        </ul>
+      </div>
+      <div class="footer-section">
+        <h4>Connect</h4>
+        <ul>
+          <li>
+            <a href="https://twitter.com/ncdsa" target="_blank" rel="noopener"
+            >Twitter</a>
+          </li>
+          <li>
+            <a
+              href="https://www.facebook.com/ncdsa"
+              target="_blank"
+              rel="noopener"
+            >Facebook</a>
+          </li>
+          <li>
+            <a
+              href="https://www.instagram.com/ncdsa"
+              target="_blank"
+              rel="noopener"
+            >Instagram</a>
+          </li>
+          <li><a href="#contact">Email Us</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>
+        &copy; {new Date().getFullYear()} North Carolina Democratic Socialists
+        of America. All rights reserved.
+      </p>
+    </div>
+  </div>
+</footer>
+
+<style>
+footer {
+  background: var(--black);
+  color: var(--white);
+  padding: 3rem 0 1rem;
+  margin-top: 4rem;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+.footer-content {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 2rem;
+  margin-bottom: 2rem;
+}
+
+.footer-section h3 {
+  color: var(--red-primary);
+  margin-bottom: 1rem;
+}
+
+.footer-section h4 {
+  color: var(--white);
+  margin-bottom: 1rem;
+  font-size: 1.1rem;
+}
+
+.footer-section p {
+  margin-bottom: 0.5rem;
+  line-height: 1.6;
+}
+
+.footer-section ul {
+  list-style: none;
+  padding: 0;
+}
+
+.footer-section ul li {
+  margin-bottom: 0.5rem;
+}
+
+.footer-section a {
+  color: var(--white);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.footer-section a:hover {
+  color: var(--red-primary);
+  text-decoration: none;
+}
+
+.footer-bottom {
+  border-top: 1px solid #333;
+  padding-top: 1rem;
+  text-align: center;
+  color: #999;
+}
+
+@media (max-width: 768px) {
+  .footer-content {
+    grid-template-columns: 1fr;
+  }
+}
+</style>

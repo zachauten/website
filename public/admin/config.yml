@@ -1,0 +1,22 @@
+backend:
+  name: github
+  repo: zachauten/website
+  branch: main
+  site_domain: https://website-3fv.pages.dev/
+  base_url: https://website-3fv.pages.dev/
+  auth_endpoint: /api/auth
+media_folder: public/images
+public_folder: /public/images
+
+collections:
+  - name: "post"
+    label: "Post"
+    folder: "_posts/"
+    create: true
+    slug: "{{year}}-{{month}}-{{day}}-{{slug}}" 
+    fields:
+      - { label: "Layout", name: "layout", widget: "hidden", default: "post" }
+      - { label: "Title", name: "title", widget: "string" }
+      - { label: "Publish Date", name: "date", widget: "datetime" }
+      - { label: "Featured Image", name: "image", widget: "image" }
+      - { label: "Body", name: "body", widget: "markdown" }

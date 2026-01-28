@@ -1,0 +1,139 @@
+---
+interface Props {
+  title: string;
+  start: Date;
+  end?: Date;
+  location?: string;
+  description?: string;
+}
+
+const { title, start, end, location, description } = Astro.props;
+
+const formatDate = (date: Date) => {
+  return date.toLocaleDateString("en-US", {
+    weekday: "long",
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
+};
+
+const formatTime = (date: Date) => {
+  return date.toLocaleTimeString("en-US", {
+    hour: "numeric",
+    minute: "2-digit",
+    hour12: true,
+  });
+};
+---
+
+<div class="event-card">
+  <div class="event-date">
+    <div class="event-month">
+      {start.toLocaleDateString("en-US", { month: "short" }).toUpperCase()}
+    </div>
+    <div class="event-day">{start.getDate()}</div>
+  </div>
+  <div class="event-details">
+    <h3>{title}</h3>
+    <div class="event-meta">
+      <p class="event-time">
+        <strong>📅 {formatDate(start)}</strong><br />
+        ⏰ {formatTime(start)}{end && ` - ${formatTime(end)}`}
+      </p>
+      {location && <p class="event-location">📍 {location}</p>}
+    </div>
+    {description && <p class="event-description" set:html={description} />}
+  </div>
+</div>
+
+<style>
+.event-card {
+  display: flex;
+  gap: 1.5rem;
+  padding: 1.5rem;
+  background: var(--white);
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin-bottom: 1.5rem;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.event-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.event-date {
+  flex-shrink: 0;
+  width: 80px;
+  height: 80px;
+  background: var(--red-primary);
+  color: var(--white);
+  text-align: center;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.event-month {
+  font-size: 0.875rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+}
+
+.event-day {
+  font-size: 2rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.event-details {
+  flex: 1;
+}
+
+.event-details h3 {
+  color: var(--red-primary);
+  margin-bottom: 0.75rem;
+  font-size: 1.5rem;
+}
+
+.event-meta {
+  margin-bottom: 0.75rem;
+}
+
+.event-time,
+.event-location {
+  margin: 0.5rem 0;
+  color: var(--gray-medium);
+}
+
+.event-description {
+  color: var(--text-primary);
+  line-height: 1.6;
+  margin-top: 0.75rem;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  word-break: break-word;
+}
+
+@media (max-width: 768px) {
+  .event-card {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .event-date {
+    width: 100%;
+    flex-direction: row;
+    gap: 0.5rem;
+    padding: 0.75rem;
+  }
+
+  .event-day {
+    font-size: 1.5rem;
+  }
+}
+</style>

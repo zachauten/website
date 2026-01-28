@@ -6,9 +6,21 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "fmt": "dprint fmt",
+    "prepare": "husky"
   },
   "dependencies": {
-    "astro": "^5.16.14"
+    "astro": "^5.16.14",
+    "decap-cms-app": "^3.10.0",
+    "ical.js": "^2.2.1"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^20.4.1",
+    "@commitlint/config-conventional": "^20.4.1",
+    "@types/node": "^25.2.3",
+    "commitlint": "^20.4.1",
+    "dprint": "^0.51.1",
+    "husky": "^9.1.7"
   }
 }

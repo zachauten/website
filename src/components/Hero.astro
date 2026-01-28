@@ -1,0 +1,111 @@
+---
+
+---
+
+<section class="hero">
+  <div class="container">
+    <div class="hero-content">
+      <h1>A Better North Carolina is Possible!</h1>
+      <p class="hero-subtitle">
+        We're building power for the working class and fighting for a better
+        future for all North Carolinians.
+      </p>
+      <div class="hero-buttons">
+        <a href="#join" class="button primary">Become a Member</a>
+        <a href="#about" class="button secondary">Learn More</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+.hero {
+  background: linear-gradient(
+    135deg,
+    var(--red-primary) 0%,
+    var(--red-dark) 100%
+  );
+  color: var(--white);
+  padding: 6rem 0;
+  text-align: center;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+.hero-content {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.hero h1 {
+  font-size: 3rem;
+  margin-bottom: 1.5rem;
+  line-height: 1.2;
+}
+
+.hero-subtitle {
+  font-size: 1.25rem;
+  margin-bottom: 2rem;
+  opacity: 0.95;
+}
+
+.hero-buttons {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.button {
+  display: inline-block;
+  padding: 1rem 2rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  border-radius: 4px;
+  transition: all 0.3s;
+  text-decoration: none;
+}
+
+.button.primary {
+  background: var(--white);
+  color: var(--red-primary);
+}
+
+.button.primary:hover {
+  background: var(--gray-light);
+  text-decoration: none;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.button.secondary {
+  background: transparent;
+  color: var(--white);
+  border: 2px solid var(--white);
+}
+
+.button.secondary:hover {
+  background: var(--white);
+  color: var(--red-primary);
+  text-decoration: none;
+  transform: translateY(-2px);
+}
+
+@media (max-width: 768px) {
+  .hero {
+    padding: 4rem 0;
+  }
+
+  .hero h1 {
+    font-size: 2rem;
+  }
+
+  .hero-subtitle {
+    font-size: 1.1rem;
+  }
+}
+</style>
