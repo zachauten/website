@@ -3,3 +3,5 @@ dist/
 .astro/
 .husky/_
 .env
+.dev.vars
+.wrangler/

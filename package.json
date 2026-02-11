@@ -3,7 +3,8 @@
   "type": "module",
   "version": "0.0.1",
   "scripts": {
-    "dev": "astro dev",
+    "dev": "wrangler pages dev --compatibility-date=2024-01-01 -- astro dev",
+    "dev:astro": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro",
@@ -21,6 +22,7 @@
     "@types/node": "^25.2.3",
     "commitlint": "^20.4.1",
     "dprint": "^0.51.1",
-    "husky": "^9.1.7"
+    "husky": "^9.1.7",
+    "wrangler": "^4.64.0"
   }
 }
