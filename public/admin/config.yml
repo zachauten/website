@@ -1,3 +1,4 @@
+local_backend: true
 backend:
   name: github
   repo: zachauten/website
@@ -14,10 +15,76 @@ collections:
     label: "Post"
     folder: "_posts/"
     create: true
-    slug: "{{year}}-{{month}}-{{day}}-{{slug}}" 
+    slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
     fields:
       - { label: "Layout", name: "layout", widget: "hidden", default: "post" }
       - { label: "Title", name: "title", widget: "string" }
       - { label: "Publish Date", name: "date", widget: "datetime" }
       - { label: "Featured Image", name: "image", widget: "image" }
       - { label: "Body", name: "body", widget: "markdown" }
+
+  - name: "program"
+    label: "Program Items"
+    folder: "_program/"
+    create: true
+    slug: "{{slug}}"
+    fields:
+      - { label: "Title", name: "title", widget: "string" }
+      - {
+          label: "Icon",
+          name: "icon",
+          widget: "string",
+          hint: "Emoji or icon to display",
+        }
+      - { label: "Description", name: "description", widget: "text" }
+      - {
+          label: "Order",
+          name: "order",
+          widget: "number",
+          default: 0,
+          hint: "Display order (lower numbers first)",
+        }
+
+  - name: "campaign"
+    label: "Campaigns"
+    folder: "_campaigns/"
+    create: true
+    slug: "{{slug}}"
+    fields:
+      - { label: "Title", name: "title", widget: "string" }
+      - { label: "Description", name: "description", widget: "text" }
+      - {
+          label: "Order",
+          name: "order",
+          widget: "number",
+          default: 0,
+          hint: "Display order (lower numbers first)",
+        }
+
+  - name: "homepage"
+    label: "Homepage Content"
+    files:
+      - label: "Homepage Sections"
+        name: "homepage"
+        file: "_content/homepage.md"
+        fields:
+          - label: "Hero Section"
+            name: "hero"
+            widget: "object"
+            fields:
+              - { label: "Title", name: "title", widget: "string" }
+              - { label: "Subtitle", name: "subtitle", widget: "text" }
+          - label: "About Section"
+            name: "about"
+            widget: "object"
+            fields:
+              - { label: "Heading", name: "heading", widget: "string" }
+              - { label: "Paragraph 1", name: "paragraph1", widget: "text" }
+              - { label: "Paragraph 2", name: "paragraph2", widget: "text" }
+          - label: "Join Section"
+            name: "join"
+            widget: "object"
+            fields:
+              - { label: "Heading", name: "heading", widget: "string" }
+              - { label: "Main Text", name: "text", widget: "text" }
+              - { label: "Dues Info", name: "duesInfo", widget: "string" }

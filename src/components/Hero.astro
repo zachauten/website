@@ -1,14 +1,18 @@
 ---
+interface Props {
+  title: string;
+  subtitle: string;
+}
 
+const { title, subtitle } = Astro.props;
 ---
 
 <section class="hero">
   <div class="container">
     <div class="hero-content">
-      <h1>A Better North Carolina is Possible!</h1>
+      <h1>{title}</h1>
       <p class="hero-subtitle">
-        We're building power for the working class and fighting for a better
-        future for all North Carolinians.
+        {subtitle}
       </p>
       <div class="hero-buttons">
         <a href="#join" class="button primary">Become a Member</a>

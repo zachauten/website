@@ -3,30 +3,42 @@ import Footer from "../components/Footer.astro";
 import Header from "../components/Header.astro";
 import Hero from "../components/Hero.astro";
 import Layout from "../layouts/Layout.astro";
+
+// Fetch homepage content from Decap
+const homepageContent = await Astro.glob("../../_content/homepage.md");
+const homepage = homepageContent[0]?.frontmatter || {};
+
+// Fetch program items from Decap
+const programItems = await Astro.glob("../../_program/*.md");
+const sortedProgram = programItems.sort((a, b) => {
+  const orderA = a.frontmatter.order || 0;
+  const orderB = b.frontmatter.order || 0;
+  return orderA - orderB;
+});
+
+// Fetch campaigns from Decap
+const campaignItems = await Astro.glob("../../_campaigns/*.md");
+const sortedCampaigns = campaignItems.sort((a, b) => {
+  const orderA = a.frontmatter.order || 0;
+  const orderB = b.frontmatter.order || 0;
+  return orderA - orderB;
+});
 ---
 
 <Layout title="North Carolina DSA - Democratic Socialists of America">
   <Header />
-  <Hero />
+  <Hero title={homepage.hero?.title} subtitle={homepage.hero?.subtitle} />
 
   <main>
     <!-- About Section -->
     <section id="about" class="section">
       <div class="container">
-        <h2>About North Carolina DSA</h2>
+        <h2>{homepage.about?.heading}</h2>
         <p>
-          The Democratic Socialists of America (DSA) is the largest socialist
-          organization in the United States. Our North Carolina chapter is
-          committed to building a more just, equitable, and democratic society
-          across the Tar Heel State.
+          {homepage.about?.paragraph1}
         </p>
         <p>
-          We believe that both the economy and society should be run
-          democratically to meet human needs, not to make profits for a few. We
-          are a political and activist organization, not a party; through campus
-          and community-based chapters, DSA members use a variety of tactics,
-          from legislative to direct action, to fight for reforms that empower
-          working people.
+          {homepage.about?.paragraph2}
         </p>
       </div>
     </section>
@@ -35,47 +47,12 @@ import Layout from "../layouts/Layout.astro";
       <div class="container">
         <h2>Our Program</h2>
         <div class="values-grid">
-          <div class="value-card">
-            <h3>🏥 Medicare for All</h3>
-            <p>
-              Universal, single-payer healthcare as a human right for all North
-              Carolinians.
-            </p>
-          </div>
-          <div class="value-card">
-            <h3>🏠 Housing Justice</h3>
-            <p>
-              Affordable housing, strong tenant protections, and an end to
-              displacement.
-            </p>
-          </div>
-          <div class="value-card">
-            <h3>🌱 Green New Deal</h3>
-            <p>
-              A just transition to renewable energy and good-paying green jobs.
-            </p>
-          </div>
-          <div class="value-card">
-            <h3>⚖️ Racial Justice</h3>
-            <p>
-              Fighting systemic racism and building an anti-racist, multiracial
-              democracy.
-            </p>
-          </div>
-          <div class="value-card">
-            <h3>💼 Worker Power</h3>
-            <p>
-              Strong unions, living wages, and democratic control of the
-              workplace.
-            </p>
-          </div>
-          <div class="value-card">
-            <h3>🎓 Education for All</h3>
-            <p>
-              Free public education from pre-K through college and cancellation
-              of student debt.
-            </p>
-          </div>
+          {sortedProgram.map((item) => (
+            <div class="value-card">
+              <h3>{item.frontmatter.icon} {item.frontmatter.title}</h3>
+              <p>{item.frontmatter.description}</p>
+            </div>
+          ))}
         </div>
       </div>
     </section>
@@ -85,30 +62,12 @@ import Layout from "../layouts/Layout.astro";
       <div class="container">
         <h2>Our Campaigns</h2>
         <div class="campaigns-grid">
-          <div class="campaign-card">
-            <h3>Medicare for All</h3>
-            <p>
-              We're organizing across North Carolina to win universal
-              healthcare. Join us in phonebanking, canvassing, and putting
-              pressure on elected officials to support single-payer healthcare.
-            </p>
-          </div>
-          <div class="campaign-card">
-            <h3>Tenant Organizing</h3>
-            <p>
-              Fighting for tenant rights, rent control, and affordable housing
-              in our communities. We support tenant unions and organize against
-              predatory landlords.
-            </p>
-          </div>
-          <div class="campaign-card">
-            <h3>Labor Solidarity</h3>
-            <p>
-              Standing with workers on picket lines, supporting union drives,
-              and fighting for better wages and working conditions across North
-              Carolina.
-            </p>
-          </div>
+          {sortedCampaigns.map((campaign) => (
+            <div class="campaign-card">
+              <h3>{campaign.frontmatter.title}</h3>
+              <p>{campaign.frontmatter.description}</p>
+            </div>
+          ))}
         </div>
       </div>
     </section>
@@ -116,12 +75,9 @@ import Layout from "../layouts/Layout.astro";
     <!-- Join Section -->
     <section id="join" class="section bg-red">
       <div class="container">
-        <h2>Join North Carolina DSA</h2>
+        <h2>{homepage.join?.heading}</h2>
         <p class="join-text">
-          Ready to fight for a better North Carolina? Becoming a member of DSA
-          means joining thousands of socialists across the country working to
-          transform our society. Your membership dues support our organizing
-          work and help build the socialist movement.
+          {homepage.join?.text}
         </p>
         <div class="join-buttons">
           <a
@@ -134,7 +90,7 @@ import Layout from "../layouts/Layout.astro";
           >Contact NC Chapter</a>
         </div>
         <p class="dues-info">
-          Dues start at $5/month. No one is turned away for lack of funds.
+          {homepage.join?.duesInfo}
         </p>
       </div>
     </section>
