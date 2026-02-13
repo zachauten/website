@@ -2,8 +2,10 @@ backend:
   name: github
   repo: zachauten/website
   branch: main
-  site_domain: https://website-3fv.pages.dev/
-  base_url: https://website-3fv.pages.dev/
+  # For local development, change base_url to: http://localhost:8788
+  # For production, use: https://website.zachauten.workers.dev/
+  base_url: https://website.zachauten.workers.dev/
+
   auth_endpoint: /api/auth
 media_folder: public/images
 public_folder: /public/images
