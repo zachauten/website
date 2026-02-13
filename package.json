@@ -17,6 +17,7 @@
     "ical.js": "^2.2.1"
   },
   "devDependencies": {
+    "@astrojs/cloudflare": "^12.6.12",
     "@commitlint/cli": "^20.4.1",
     "@commitlint/config-conventional": "^20.4.1",
     "@types/node": "^25.2.3",

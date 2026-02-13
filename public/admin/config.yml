@@ -3,9 +3,8 @@ backend:
   repo: zachauten/website
   branch: main
   # For local development, change base_url to: http://localhost:8788
-  # For production, use: https://website.zachauten.workers.dev/
-  base_url: https://website.zachauten.workers.dev/
-
+  # For production, use: https://website-3fv.pages.dev
+  base_url: https://website-3fv.pages.dev
   auth_endpoint: /api/auth
 media_folder: public/images
 public_folder: /public/images
