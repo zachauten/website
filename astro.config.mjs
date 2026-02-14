@@ -10,7 +10,7 @@ export default defineConfig({
     },
     routes: {
       extend: {
-        include: [{ pattern: "/api/*" }]
+        exclude: [{ pattern: "/api/*" }]
       }
     }
   }),
