@@ -8,5 +8,10 @@ export default defineConfig({
     platformProxy: {
       enabled: true,
     },
+    routes: {
+      extend: {
+        exclude: [{ pattern: "/api/auth" }, { pattern: "/api/callback" }]
+      }
+    }
   }),
 });
