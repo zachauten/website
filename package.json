@@ -15,7 +15,8 @@
   "dependencies": {
     "astro": "^5.16.14",
     "decap-cms-app": "^3.10.0",
-    "ical.js": "^2.2.1"
+    "ical.js": "^2.2.1",
+    "strapi-community-astro-loader": "^2.0.6"
   },
   "devDependencies": {
     "@astrojs/cloudflare": "^12.6.12",
