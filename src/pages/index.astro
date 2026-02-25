@@ -1,28 +1,48 @@
 ---
+import { sanityClient } from "sanity:client";
 import Footer from "../components/Footer.astro";
 import Header from "../components/Header.astro";
 import Hero from "../components/Hero.astro";
 import Layout from "../layouts/Layout.astro";
+import { type Campaign } from "../sanity/schemaTypes/campaign";
+import { type HomepageContent } from "../sanity/schemaTypes/homepageContent";
+import { type ProgramItem } from "../sanity/schemaTypes/programItem";
+import { type SocialMedia } from "../sanity/schemaTypes/socialMedia";
 
-// Fetch homepage content from Decap
-const homepageContent = await Astro.glob("../../_content/homepage.md");
-const homepage = homepageContent[0]?.frontmatter || {};
+const homepage = (await sanityClient.fetch<HomepageContent | null>(
+  `*[_type == "homepageContent"][0]{
+      hero,
+      about,
+      join
+    }`,
+)) ?? {};
 
-// Fetch program items from Decap
-const programItems = await Astro.glob("../../_program/*.md");
-const sortedProgram = programItems.sort((a, b) => {
-  const orderA = a.frontmatter.order || 0;
-  const orderB = b.frontmatter.order || 0;
-  return orderA - orderB;
-});
+const sortedProgram = await sanityClient.fetch<ProgramItem[]>(
+  `*[_type == "programItem"] | order(order asc) {
+    title,
+    icon,
+    description,
+    order
+  }`,
+);
 
-// Fetch campaigns from Decap
-const campaignItems = await Astro.glob("../../_campaigns/*.md");
-const sortedCampaigns = campaignItems.sort((a, b) => {
-  const orderA = a.frontmatter.order || 0;
-  const orderB = b.frontmatter.order || 0;
-  return orderA - orderB;
-});
+const sortedCampaigns = await sanityClient.fetch<Campaign[]>(
+  `*[_type == "campaign"] | order(order asc) {
+    title,
+    description,
+    order
+  }`,
+);
+
+const socialMediaItems = await sanityClient.fetch<SocialMedia[]>(
+  `*[_type == "socialMedia"] | order(order asc) {
+    platform,
+    label,
+    url,
+    emoji,
+    order
+  }`,
+);
 ---
 
 <Layout title="North Carolina DSA - Democratic Socialists of America">
@@ -49,8 +69,8 @@ const sortedCampaigns = campaignItems.sort((a, b) => {
         <div class="values-grid">
           {sortedProgram.map((item) => (
             <div class="value-card">
-              <h3>{item.frontmatter.icon} {item.frontmatter.title}</h3>
-              <p>{item.frontmatter.description}</p>
+              <h3>{item.icon} {item.title}</h3>
+              <p>{item.description}</p>
             </div>
           ))}
         </div>
@@ -64,8 +84,8 @@ const sortedCampaigns = campaignItems.sort((a, b) => {
         <div class="campaigns-grid">
           {sortedCampaigns.map((campaign) => (
             <div class="campaign-card">
-              <h3>{campaign.frontmatter.title}</h3>
-              <p>{campaign.frontmatter.description}</p>
+              <h3>{campaign.title}</h3>
+              <p>{campaign.description}</p>
             </div>
           ))}
         </div>
@@ -122,37 +142,27 @@ const sortedCampaigns = campaignItems.sort((a, b) => {
           to hear from you!
         </p>
         <ul class="contact-list">
-          <li>
-            📧 Email us at: <a href="mailto:contact@ncdsa.org"
-            >contact@ncdsa.org</a>
-          </li>
-          <li>
-            🐦 Follow us on Twitter: <a
-              href="https://twitter.com/ncdsa"
-              target="_blank"
-              rel="noopener"
-            >@ncdsa</a>
-          </li>
-          <li>
-            📘 Like us on Facebook: <a
-              href="https://www.facebook.com/ncdsa"
-              target="_blank"
-              rel="noopener"
-            >NC DSA</a>
-          </li>
-          <li>
-            📸 Follow us on Instagram: <a
-              href="https://www.instagram.com/ncdsa"
-              target="_blank"
-              rel="noopener"
-            >@ncdsa</a>
-          </li>
+          {socialMediaItems.map((item: SocialMedia) => {
+            const isExternal = item.url.startsWith("http://")
+              || item.url.startsWith("https://");
+
+            return (
+              <li>
+                {item.emoji ? `${item.emoji} ` : ""}
+                {item.platform}: <a
+                  href={item.url}
+                  target={isExternal ? "_blank" : undefined}
+                  rel={isExternal ? "noopener" : undefined}
+                >{item.label}</a>
+              </li>
+            );
+          })}
         </ul>
       </div>
     </section>
   </main>
 
-  <Footer />
+  <Footer socialMediaItems={socialMediaItems} />
 </Layout>
 
 <style>

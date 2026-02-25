@@ -1,5 +1,23 @@
 ---
+import { sanityClient } from "sanity:client";
+import { type SocialMedia } from "../sanity/schemaTypes/socialMedia";
 
+interface Props {
+  socialMediaItems?: SocialMedia[];
+}
+
+const { socialMediaItems: socialMediaFromProps } = Astro.props as Props;
+
+const socialMediaItems = socialMediaFromProps
+  ?? await sanityClient.fetch<SocialMedia[]>(
+    `*[_type == "socialMedia"] | order(order asc) {
+      platform,
+      label,
+      url,
+      emoji,
+      order
+    }`,
+  );
 ---
 
 <footer>
@@ -21,25 +39,20 @@
       <div class="footer-section">
         <h4>Connect</h4>
         <ul>
-          <li>
-            <a href="https://twitter.com/ncdsa" target="_blank" rel="noopener"
-            >Twitter</a>
-          </li>
-          <li>
-            <a
-              href="https://www.facebook.com/ncdsa"
-              target="_blank"
-              rel="noopener"
-            >Facebook</a>
-          </li>
-          <li>
-            <a
-              href="https://www.instagram.com/ncdsa"
-              target="_blank"
-              rel="noopener"
-            >Instagram</a>
-          </li>
-          <li><a href="#contact">Email Us</a></li>
+          {socialMediaItems.map((item) => {
+            const isExternal = item.url.startsWith("http://")
+              || item.url.startsWith("https://");
+
+            return (
+              <li>
+                <a
+                  href={item.url}
+                  target={isExternal ? "_blank" : undefined}
+                  rel={isExternal ? "noopener" : undefined}
+                >{item.platform}</a>
+              </li>
+            );
+          })}
         </ul>
       </div>
     </div>

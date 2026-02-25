@@ -1,0 +1,98 @@
+---
+import { sanityClient } from "sanity:client";
+import Footer from "../../components/Footer.astro";
+import Header from "../../components/Header.astro";
+import Layout from "../../layouts/Layout.astro";
+import { type Post } from "../../sanity/schemaTypes/post";
+
+const posts = await sanityClient.fetch<Post[]>(
+  `*[_type == "post" && defined(slug.current)] | order(publishedAt desc)`,
+);
+---
+
+<Layout title="Posts | North Carolina DSA">
+  <Header />
+  <main>
+    <section class="section bg-light">
+      <div class="container">
+        <h1>Posts</h1>
+        <div class="posts-grid">
+          {posts.map((post) => (
+            <article class="post-card">
+              <h2>
+                <a href={`/posts/${post.slug.current}`}>{post.title}</a>
+              </h2>
+              <p class="post-meta">
+                {post.publishedAt
+                  ? new Date(post.publishedAt).toLocaleDateString()
+                  : ""}
+              </p>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+  </main>
+  <Footer />
+</Layout>
+
+<style>
+main {
+  min-height: 100vh;
+}
+
+.section {
+  padding: 4rem 0;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+.bg-light {
+  background: var(--gray-light);
+}
+
+.posts-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+
+.post-card {
+  background: var(--white);
+  border-left: 4px solid var(--red-primary);
+  padding: 1.5rem;
+}
+
+.post-card h2 {
+  margin-bottom: 0.5rem;
+  font-size: 1.4rem;
+}
+
+.post-card a {
+  color: var(--red-primary);
+  text-decoration: none;
+}
+
+.post-card a:hover {
+  text-decoration: underline;
+}
+
+.post-meta {
+  color: var(--gray-medium);
+}
+
+@media (max-width: 768px) {
+  .section {
+    padding: 2rem 0;
+  }
+
+  .posts-grid {
+    grid-template-columns: 1fr;
+  }
+}
+</style>

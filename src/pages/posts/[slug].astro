@@ -1,0 +1,138 @@
+---
+import Footer from "../../components/Footer.astro";
+import Header from "../../components/Header.astro";
+import PortableText from "../../components/PortableText.astro";
+import Layout from "../../layouts/Layout.astro";
+import { loadQuery } from "../../sanity/lib/load-query";
+import { type Post } from "../../sanity/schemaTypes/post";
+
+interface PostPage {
+  title: string;
+  publishedAt?: string;
+  body: unknown;
+  mainImage?: {
+    alt?: string;
+    asset?: {
+      url?: string;
+    };
+  };
+}
+
+export async function getStaticPaths() {
+  const { data: posts } = await loadQuery<Post[]>({
+    query: `*[_type == "post" && defined(slug.current)]{ slug }`,
+  });
+
+  return posts.map(({ slug }) => ({
+    params: {
+      slug: slug.current,
+    },
+  }));
+}
+
+const { params } = Astro;
+
+const { data: post } = await loadQuery<PostPage>({
+  query: `*[_type == "post" && slug.current == $slug][0]{
+    title,
+    publishedAt,
+    body,
+    mainImage {
+      alt,
+      asset->{url}
+    }
+  }`,
+  params,
+});
+---
+
+<Layout title={`${post.title} | North Carolina DSA`}>
+  <Header />
+  <main>
+    <section class="section bg-light">
+      <div class="container">
+        <article class="post-card">
+          <h1>{post.title}</h1>
+          {post.publishedAt && (
+            <p class="post-meta">
+              Published {new Date(post.publishedAt).toLocaleDateString()}
+            </p>
+          )}
+          {post.mainImage?.asset?.url && (
+            <img
+              class="post-image"
+              src={post.mainImage.asset.url}
+              alt={post.mainImage.alt ?? post.title}
+            />
+          )}
+          <div class="post-body">
+            <PortableText portableText={post.body} />
+          </div>
+        </article>
+      </div>
+    </section>
+  </main>
+  <Footer />
+</Layout>
+
+<style>
+main {
+  min-height: 100vh;
+}
+
+.section {
+  padding: 4rem 0;
+}
+
+.container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+.bg-light {
+  background: var(--gray-light);
+}
+
+.post-card {
+  background: var(--white);
+  border-left: 4px solid var(--red-primary);
+  padding: 2rem;
+}
+
+.post-meta {
+  color: var(--gray-medium);
+  margin-bottom: 1.5rem;
+}
+
+.post-image {
+  width: 100%;
+  height: auto;
+  margin-bottom: 1.5rem;
+  border-radius: 4px;
+  display: block;
+}
+
+.post-body :global(p),
+.post-body :global(ul),
+.post-body :global(ol),
+.post-body :global(blockquote) {
+  margin-bottom: 1rem;
+}
+
+.post-body :global(h2),
+.post-body :global(h3),
+.post-body :global(h4) {
+  margin-top: 1.5rem;
+}
+
+@media (max-width: 768px) {
+  .section {
+    padding: 2rem 0;
+  }
+
+  .post-card {
+    padding: 1.5rem;
+  }
+}
+</style>
