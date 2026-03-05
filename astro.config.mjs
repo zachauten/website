@@ -14,6 +14,9 @@ const { PUBLIC_SANITY_PROJECT_ID, PUBLIC_SANITY_DATASET } = loadEnv(
 
 // https://astro.build/config
 export default defineConfig({
+  redirects: {
+    "/leftangles/[year]/[month]/[day]/[slug]": "/leftangles/[slug]",
+  },
   integrations: [
     sanity({
       projectId: PUBLIC_SANITY_PROJECT_ID,

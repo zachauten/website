@@ -1,26 +1,35 @@
 ---
-import { sanityClient } from "sanity:client";
-import Footer from "../../components/Footer.astro";
-import Header from "../../components/Header.astro";
 import Layout from "../../layouts/Layout.astro";
-import { type Post } from "../../sanity/schemaTypes/post";
+import { loadQuery } from "../../sanity/lib/load-query";
 
-const posts = await sanityClient.fetch<Post[]>(
-  `*[_type == "post" && defined(slug.current)] | order(publishedAt desc)`,
-);
+interface PostListItem {
+  title: string;
+  slug: {
+    current: string;
+  };
+  publishedAt?: string;
+}
+
+const { data: posts } = await loadQuery<PostListItem[]>({
+  query: `*[_type == "post" && defined(slug.current)]
+    | order(coalesce(publishedAt, _createdAt) desc){
+      title,
+      slug,
+      publishedAt
+    }`,
+});
 ---
 
 <Layout title="Posts | North Carolina DSA">
-  <Header />
   <main>
     <section class="section bg-light">
       <div class="container">
-        <h1>Posts</h1>
+        <h1>Left Angles</h1>
         <div class="posts-grid">
           {posts.map((post) => (
             <article class="post-card">
               <h2>
-                <a href={`/posts/${post.slug.current}`}>{post.title}</a>
+                <a href={`/leftangles/${post.slug.current}`}>{post.title}</a>
               </h2>
               <p class="post-meta">
                 {post.publishedAt
@@ -33,7 +42,6 @@ const posts = await sanityClient.fetch<Post[]>(
       </div>
     </section>
   </main>
-  <Footer />
 </Layout>
 
 <style>

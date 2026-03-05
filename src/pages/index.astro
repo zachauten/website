@@ -1,7 +1,5 @@
 ---
 import { sanityClient } from "sanity:client";
-import Footer from "../components/Footer.astro";
-import Header from "../components/Header.astro";
 import Hero from "../components/Hero.astro";
 import Layout from "../layouts/Layout.astro";
 import { type Campaign } from "../sanity/schemaTypes/campaign";
@@ -9,15 +7,15 @@ import { type HomepageContent } from "../sanity/schemaTypes/homepageContent";
 import { type ProgramItem } from "../sanity/schemaTypes/programItem";
 import { type SocialMedia } from "../sanity/schemaTypes/socialMedia";
 
-const homepage = (await sanityClient.fetch<HomepageContent | null>(
+export const homepage = await sanityClient.fetch<HomepageContent>(
   `*[_type == "homepageContent"][0]{
       hero,
       about,
       join
     }`,
-)) ?? {};
+);
 
-const sortedProgram = await sanityClient.fetch<ProgramItem[]>(
+export const sortedProgram = await sanityClient.fetch<ProgramItem[]>(
   `*[_type == "programItem"] | order(order asc) {
     title,
     icon,
@@ -26,7 +24,7 @@ const sortedProgram = await sanityClient.fetch<ProgramItem[]>(
   }`,
 );
 
-const sortedCampaigns = await sanityClient.fetch<Campaign[]>(
+export const sortedCampaigns = await sanityClient.fetch<Campaign[]>(
   `*[_type == "campaign"] | order(order asc) {
     title,
     description,
@@ -34,7 +32,7 @@ const sortedCampaigns = await sanityClient.fetch<Campaign[]>(
   }`,
 );
 
-const socialMediaItems = await sanityClient.fetch<SocialMedia[]>(
+export const socialMediaItems = await sanityClient.fetch<SocialMedia[]>(
   `*[_type == "socialMedia"] | order(order asc) {
     platform,
     label,
@@ -46,9 +44,7 @@ const socialMediaItems = await sanityClient.fetch<SocialMedia[]>(
 ---
 
 <Layout title="North Carolina DSA - Democratic Socialists of America">
-  <Header />
   <Hero title={homepage.hero?.title} subtitle={homepage.hero?.subtitle} />
-
   <main>
     <!-- About Section -->
     <section id="about" class="section">
@@ -142,7 +138,7 @@ const socialMediaItems = await sanityClient.fetch<SocialMedia[]>(
           to hear from you!
         </p>
         <ul class="contact-list">
-          {socialMediaItems.map((item: SocialMedia) => {
+          {socialMediaItems.map((item) => {
             const isExternal = item.url.startsWith("http://")
               || item.url.startsWith("https://");
 
@@ -161,8 +157,6 @@ const socialMediaItems = await sanityClient.fetch<SocialMedia[]>(
       </div>
     </section>
   </main>
-
-  <Footer socialMediaItems={socialMediaItems} />
 </Layout>
 
 <style>
@@ -170,8 +164,12 @@ main {
   min-height: 100vh;
 }
 
+h2 {
+  margin: 1rem 0;
+}
+
 .section {
-  padding: 4rem 0;
+  padding: 3rem 0 4rem 0;
 }
 
 .container {

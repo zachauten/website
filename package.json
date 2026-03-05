@@ -3,8 +3,8 @@
   "type": "module",
   "version": "0.0.1",
   "scripts": {
-    "dev": "wrangler pages dev --compatibility-date=2026-02-12 -- astro dev",
-    "dev:astro": "astro dev",
+    "dev": "astro dev",
+    "dev:wrangler": "wrangler pages dev --compatibility-date=2026-02-12 -- astro dev",
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro",

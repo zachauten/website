@@ -47,7 +47,6 @@ const { data: post } = await loadQuery<PostPage>({
 ---
 
 <Layout title={`${post.title} | North Carolina DSA`}>
-  <Header />
   <main>
     <section class="section bg-light">
       <div class="container">
@@ -72,7 +71,6 @@ const { data: post } = await loadQuery<PostPage>({
       </div>
     </section>
   </main>
-  <Footer />
 </Layout>
 
 <style>
