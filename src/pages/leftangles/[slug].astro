@@ -4,8 +4,7 @@ import Header from "../../components/Header.astro";
 import PortableText from "../../components/PortableText.astro";
 import Layout from "../../layouts/Layout.astro";
 import { loadQuery } from "../../sanity/lib/load-query";
-
-export const prerender = false;
+import { type Post } from "../../sanity/schemaTypes/post";
 
 interface PostPage {
   title: string;
@@ -19,13 +18,21 @@ interface PostPage {
   };
 }
 
-const { slug } = Astro.params;
+export async function getStaticPaths() {
+  const { data: posts } = await loadQuery<Post[]>({
+    query: `*[_type == "post" && defined(slug.current)]{ slug }`,
+  });
 
-if (!slug) {
-  return Astro.redirect("/leftangles");
+  return posts.map(({ slug }) => ({
+    params: {
+      slug: slug.current,
+    },
+  }));
 }
 
-const { data: post } = await loadQuery<PostPage | null>({
+const { params } = Astro;
+
+const { data: post } = await loadQuery<PostPage>({
   query: `*[_type == "post" && slug.current == $slug][0]{
     title,
     publishedAt,
@@ -35,12 +42,8 @@ const { data: post } = await loadQuery<PostPage | null>({
       asset->{url}
     }
   }`,
-  params: { slug },
+  params,
 });
-
-if (!post) {
-  return Astro.redirect("/leftangles");
-}
 ---
 
 <Layout title={`${post.title} | North Carolina DSA`}>
