@@ -14,6 +14,7 @@ const { PUBLIC_SANITY_PROJECT_ID, PUBLIC_SANITY_DATASET } = loadEnv(
 
 // https://astro.build/config
 export default defineConfig({
+  output: "server",
   redirects: {
     // "/leftangles/[year]/[month]/[day]/[slug]": "/leftangles/[slug]",
   },

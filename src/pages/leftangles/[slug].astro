@@ -18,18 +18,6 @@ interface PostPage {
   };
 }
 
-export async function getStaticPaths() {
-  const { data: posts } = await loadQuery<Post[]>({
-    query: `*[_type == "post" && defined(slug.current)]{ slug }`,
-  });
-
-  return posts.map(({ slug }) => ({
-    params: {
-      slug: slug.current,
-    },
-  }));
-}
-
 const { params } = Astro;
 
 const { data: post } = await loadQuery<PostPage>({

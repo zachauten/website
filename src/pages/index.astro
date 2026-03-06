@@ -7,7 +7,7 @@ import { type HomepageContent } from "../sanity/schemaTypes/homepageContent";
 import { type ProgramItem } from "../sanity/schemaTypes/programItem";
 import { type SocialMedia } from "../sanity/schemaTypes/socialMedia";
 
-export const homepage = await sanityClient.fetch<HomepageContent>(
+const homepage = await sanityClient.fetch<HomepageContent>(
   `*[_type == "homepageContent"][0]{
       hero,
       about,
@@ -15,7 +15,7 @@ export const homepage = await sanityClient.fetch<HomepageContent>(
     }`,
 );
 
-export const sortedProgram = await sanityClient.fetch<ProgramItem[]>(
+const sortedProgram = await sanityClient.fetch<ProgramItem[]>(
   `*[_type == "programItem"] | order(order asc) {
     title,
     icon,
@@ -24,7 +24,7 @@ export const sortedProgram = await sanityClient.fetch<ProgramItem[]>(
   }`,
 );
 
-export const sortedCampaigns = await sanityClient.fetch<Campaign[]>(
+const sortedCampaigns = await sanityClient.fetch<Campaign[]>(
   `*[_type == "campaign"] | order(order asc) {
     title,
     description,
@@ -32,7 +32,7 @@ export const sortedCampaigns = await sanityClient.fetch<Campaign[]>(
   }`,
 );
 
-export const socialMediaItems = await sanityClient.fetch<SocialMedia[]>(
+const socialMediaItems = await sanityClient.fetch<SocialMedia[]>(
   `*[_type == "socialMedia"] | order(order asc) {
     platform,
     label,
