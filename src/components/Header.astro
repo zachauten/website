@@ -1,14 +1,17 @@
 ---
 const pathname = Astro.url.pathname;
 
-const navLinks = [
-  { label: "About", href: "/#about" },
+const aboutDropdownLinks = [
+  { label: "Program", href: "/#program" },
   { label: "Campaigns", href: "/#campaigns" },
+  { label: "Contact", href: "/#contact" },
+];
+
+const navLinks = [
   { label: "Left Angles", href: "/leftangles" },
   { label: "Endorsements", href: "/endorsements" },
   { label: "Calendar", href: "/calendar" },
   { label: "Wiki", href: "https://wiki.dsanc.org/", external: true },
-  { label: "Contact", href: "/#contact" },
   { label: "Join", href: "/#join", cta: true },
 ];
 
@@ -28,6 +31,37 @@ function isActive(href: string) {
     <!-- Desktop nav -->
     <nav class="nav-desktop" aria-label="Main navigation">
       <ul>
+        <li class="nav-dropdown">
+          <a
+            href="/#about"
+            class:list={[
+              "nav-link",
+              "nav-dropdown-trigger",
+              { "nav-link--active": pathname === "/" },
+            ]}
+          >
+            About
+            <svg
+              class="dropdown-icon"
+              width="12"
+              height="12"
+              viewBox="0 0 12 12"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.5"
+              aria-hidden="true"
+            >
+              <path d="M2.5 4.5L6 8L9.5 4.5" />
+            </svg>
+          </a>
+          <ul class="dropdown-menu">
+            {aboutDropdownLinks.map((link) => (
+              <li>
+                <a href={link.href} class="dropdown-link">{link.label}</a>
+              </li>
+            ))}
+          </ul>
+        </li>
         {navLinks.map((link) => (
           <li>
             <a
@@ -81,6 +115,23 @@ function isActive(href: string) {
     hidden
   >
     <ul>
+      <li>
+        <p class="mobile-group-title">About</p>
+      </li>
+      {aboutDropdownLinks.map((link) => (
+        <li>
+          <a
+            href={link.href}
+            class:list={[
+              "mobile-link",
+              "mobile-link--sub",
+              { "mobile-link--active": isActive(link.href) },
+            ]}
+          >
+            {link.label}
+          </a>
+        </li>
+      ))}
       {navLinks.map((link) => (
         <li>
           <a
@@ -250,6 +301,71 @@ if (toggle && menu) {
   transform: scaleX(1);
 }
 
+.nav-dropdown {
+  position: relative;
+}
+
+.nav-dropdown-trigger {
+  cursor: pointer;
+}
+
+.dropdown-icon {
+  transition: transform var(--duration-fast) var(--ease-out);
+}
+
+.nav-dropdown:hover .dropdown-icon,
+.nav-dropdown:focus-within .dropdown-icon {
+  transform: rotate(180deg);
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  min-width: 200px;
+  background: var(--white);
+  border: 1px solid rgba(236, 31, 39, 0.2);
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-md);
+  padding: var(--space-xs) 0;
+  display: grid;
+  gap: 0;
+  z-index: 120;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transform: translateY(-4px);
+  transition:
+    opacity var(--duration-fast) var(--ease-out),
+    transform var(--duration-fast) var(--ease-out),
+    visibility var(--duration-fast) var(--ease-out);
+}
+
+.nav-dropdown:hover .dropdown-menu,
+.nav-dropdown:focus-within .dropdown-menu {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transform: translateY(0);
+}
+
+.dropdown-link {
+  display: block;
+  padding: var(--space-sm) var(--space-md);
+  color: var(--red-primary);
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  text-decoration: none;
+}
+
+.dropdown-link:hover {
+  background: rgba(236, 31, 39, 0.1);
+  color: var(--red-primary);
+  text-decoration: none;
+}
+
 .nav-link--active {
   background: transparent;
 }
@@ -362,6 +478,27 @@ if (toggle && menu) {
   text-transform: uppercase;
   text-decoration: none;
   transition: background var(--duration-fast) var(--ease-out);
+}
+
+.mobile-group-title {
+  display: block;
+  padding: var(--space-md) var(--space-md) var(--space-xs);
+  color: var(--red-primary);
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  opacity: 0.85;
+}
+
+.mobile-link--sub {
+  font-family: var(--font-body);
+  font-size: var(--text-lg);
+  letter-spacing: 0.04em;
+  justify-content: center;
+  padding-top: var(--space-md);
+  padding-bottom: var(--space-md);
 }
 
 .mobile-link:hover {
