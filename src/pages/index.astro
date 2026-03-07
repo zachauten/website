@@ -115,7 +115,7 @@ const socialMediaItems = await sanityClient.fetch<SocialMedia[]>(
         <div class="join-buttons">
           <a
             href="https://dsausa.org/join"
-            class="btn btn--secondary"
+            class="btn btn--primary"
             target="_blank"
             rel="noopener noreferrer"
           >Join DSA</a>
@@ -287,6 +287,21 @@ main {
   margin: 0 auto;
 }
 
+#join {
+  background: pink;
+  color: var(--red-primary);
+}
+
+#join .section-heading,
+#join .section-heading--center,
+#join .section-heading--center::after {
+  color: var(--red-primary);
+}
+
+#join .section-heading::after {
+  background: var(--red-primary);
+}
+
 .join-text {
   font-size: var(--text-md);
   margin-bottom: var(--space-xl);
@@ -294,7 +309,7 @@ main {
   margin-left: auto;
   margin-right: auto;
   line-height: 1.7;
-  color: rgba(255, 255, 255, 0.92);
+  color: var(--red-primary);
 }
 
 .join-buttons {
@@ -308,8 +323,19 @@ main {
 .dues-info {
   font-style: italic;
   font-size: var(--text-sm);
-  color: rgba(255, 255, 255, 0.8);
+  color: var(--red-dark);
   max-width: none;
+}
+
+#join .btn--outline {
+  color: var(--red-primary);
+  border-color: var(--red-primary);
+}
+
+#join .btn--outline:hover {
+  background: var(--red-primary);
+  color: var(--white);
+  box-shadow: var(--shadow-lg);
 }
 
 /* --- Events CTA --- */
