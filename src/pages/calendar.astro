@@ -1,59 +1,11 @@
 ---
-import ICAL from "ical.js";
-import EventCard from "../components/EventCard.astro";
+import CalendarEmbed from "../components/CalendarEmbed";
 import Layout from "../layouts/Layout.astro";
 
-// Google Calendar iCal feed for dsa.chapelboro@gmail.com
-const ICAL_FEED_URL =
-  "https://calendar.google.com/calendar/ical/dsa.chapelboro%40gmail.com/public/basic.ics";
-
-interface CalendarEvent {
-  title: string;
-  start: Date;
-  end?: Date;
-  location?: string;
-  description?: string;
-}
-
-let events: CalendarEvent[] = [];
-let fetchError = false;
-
-try {
-  // Fetch and parse the iCal feed using ical.js
-  const response = await fetch(ICAL_FEED_URL);
-  const icalData = await response.text();
-
-  const jcalData = ICAL.parse(icalData);
-  const comp = new ICAL.Component(jcalData);
-  const vevents = comp.getAllSubcomponents("vevent");
-
-  const now = new Date();
-
-  // Extract events from parsed data
-  for (const vevent of vevents) {
-    const event = new ICAL.Event(vevent);
-    const startDate = event.startDate?.toJSDate();
-
-    // Only include future events
-    if (startDate && startDate >= now) {
-      events.push({
-        title: event.summary || "Untitled Event",
-        start: startDate,
-        end: event.endDate?.toJSDate(),
-        location: event.location || undefined,
-        description: event.description || undefined,
-      });
-    }
-  }
-
-  // Sort events by start date
-  events.sort((a, b) => a.start.getTime() - b.start.getTime());
-
-  console.log(`Successfully parsed ${events.length} upcoming events`);
-} catch (error) {
-  console.error("Error fetching calendar:", error);
-  fetchError = true;
-}
+const icalFeedUrl = import.meta.env.PUBLIC_ICAL_FEED_URL;
+const hasCalendarFeed = Boolean(icalFeedUrl);
+const subscribeUrl = icalFeedUrl?.replace(/^https?:\/\//, "webcal://") ?? "";
+const calendarDataUrl = "/api/calendar.ics";
 ---
 
 <Layout
@@ -72,8 +24,8 @@ try {
     </section>
 
     <section class="section">
-      <div class="container container--narrow">
-        {fetchError && (
+      <div class="container">
+        {!hasCalendarFeed && (
           <div class="notice" role="alert">
             <svg
               class="notice-icon"
@@ -89,23 +41,23 @@ try {
               <path d="M9 5.5v4M9 12.5h.01" />
             </svg>
             <p>
-              <strong>Note:</strong> Currently showing sample events. To connect
-              a real calendar, update the <code>ICAL_FEED_URL</code> in <code
-              >src/pages/calendar.astro</code> with your iCal feed URL.
+              <strong>Note:</strong> Calendar feed is not configured. Set
+              <code>PUBLIC_ICAL_FEED_URL</code> in your environment to show
+              events.
             </p>
           </div>
         )}
 
-        {events.length === 0 ? (
-          <div class="no-events">
-            <p>
-              No upcoming events at this time. Check back soon or follow us on
-              social media for announcements!
-            </p>
+        {hasCalendarFeed ? (
+          <div class="calendar-wrapper card card--elevated">
+            <CalendarEmbed icalUrl={calendarDataUrl} client:load />
           </div>
         ) : (
-           <div class="events-list">
-             {events.map(event => <EventCard {...event} />)}
+           <div class="no-events">
+             <p>
+               No calendar feed is available right now. Check back soon or
+               follow us on social media for announcements.
+             </p>
            </div>
          )}
 
@@ -143,7 +95,9 @@ try {
                 <circle cx="8" cy="8" r="6" />
                 <path d="M8 4v4l3 2" />
               </svg>
-              Subscribe to our calendar <em>(coming soon)</em>
+              {hasCalendarFeed ? (
+                <a href={subscribeUrl}>Subscribe to our calendar</a>
+              ) : <>Calendar subscription available soon</>}
             </li>
           </ul>
         </div>
@@ -226,8 +180,123 @@ try {
   color: var(--text-secondary);
 }
 
-.events-list {
+.calendar-wrapper {
+  padding: var(--space-lg);
   margin-bottom: var(--space-2xl);
+}
+
+.calendar-wrapper.card--elevated {
+  transition: none;
+}
+
+.calendar-wrapper.card--elevated:hover {
+  transform: none;
+  box-shadow: var(--shadow-sm);
+}
+
+.calendar-wrapper :global(.fc) {
+  font-family: var(--font-body);
+}
+
+.calendar-wrapper :global(.fc .fc-button) {
+  background: var(--red-primary);
+  border-color: var(--red-primary);
+}
+
+.calendar-wrapper :global(.fc .fc-button:hover),
+.calendar-wrapper :global(.fc .fc-button:focus) {
+  background: var(--red-dark);
+  border-color: var(--red-dark);
+}
+
+.calendar-wrapper
+  :global(.fc .fc-button-primary:not(:disabled).fc-button-active) {
+  background: var(--red-darker);
+  border-color: var(--red-darker);
+}
+
+.calendar-wrapper :global(.fc .fc-daygrid-event),
+.calendar-wrapper :global(.fc .fc-list-event-title a) {
+  color: var(--red-darker);
+}
+
+.calendar-wrapper :global(.fc .fc-daygrid-event),
+.calendar-wrapper :global(.fc .fc-list-event) {
+  cursor: pointer;
+}
+
+.calendar-wrapper :global(.calendar-modal-backdrop) {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-lg);
+  background: rgba(0, 0, 0, 0.65);
+}
+
+.calendar-wrapper :global(.calendar-modal) {
+  position: relative;
+  width: min(680px, 100%);
+  max-height: min(85vh, 860px);
+  overflow: auto;
+  background: var(--white);
+  color: var(--text-primary);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-xl);
+  padding: var(--space-xl);
+  border-top: 6px solid var(--red-primary);
+}
+
+.calendar-wrapper :global(.calendar-modal-close) {
+  position: absolute;
+  top: var(--space-sm);
+  right: var(--space-sm);
+  width: 2rem;
+  height: 2rem;
+  border: none;
+  background: transparent;
+  color: var(--gray-500);
+  font-size: 1.75rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.calendar-wrapper :global(.calendar-modal-close:hover) {
+  color: var(--red-primary);
+}
+
+.calendar-wrapper :global(.calendar-modal-title) {
+  margin: 0 2.25rem var(--space-md) 0;
+  color: var(--red-primary);
+  font-size: clamp(var(--text-xl), 2vw, var(--text-2xl));
+  line-height: 1.1;
+}
+
+.calendar-wrapper :global(.calendar-modal-meta) {
+  margin: 0 0 var(--space-sm);
+  color: var(--gray-700);
+}
+
+.calendar-wrapper :global(.calendar-modal-meta strong) {
+  color: var(--gray-900);
+}
+
+.calendar-wrapper :global(.calendar-modal-description) {
+  margin-top: var(--space-lg);
+}
+
+.calendar-wrapper :global(.calendar-modal-description p) {
+  margin: 0 0 var(--space-md);
+  max-width: none;
+  white-space: pre-wrap;
+  color: var(--text-primary);
+}
+
+.calendar-wrapper :global(.calendar-modal-actions) {
+  margin-top: var(--space-lg);
+  margin-bottom: 0;
 }
 
 .calendar-info {
@@ -267,6 +336,18 @@ try {
 @media (max-width: 768px) {
   .page-hero {
     padding: var(--space-2xl) 0;
+  }
+
+  .calendar-wrapper :global(.calendar-modal-backdrop) {
+    padding: var(--space-md);
+  }
+
+  .calendar-wrapper :global(.calendar-modal) {
+    padding: var(--space-lg);
+  }
+
+  .calendar-wrapper :global(.calendar-modal-title) {
+    margin-right: 2rem;
   }
 }
 </style>
