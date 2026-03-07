@@ -24,8 +24,7 @@
     "react": "^19.2.4",
     "react-dom": "^19.2.4",
     "react-is": "^19.2.4",
-    "sanity": "^5.13.0",
-    "styled-components": "^6.3.11"
+    "sanity": "^5.13.0"
   },
   "devDependencies": {
     "@astrojs/cloudflare": "^12.6.12",

@@ -1,8 +1,6 @@
 ---
 import ICAL from "ical.js";
 import EventCard from "../components/EventCard.astro";
-import Footer from "../components/Footer.astro";
-import Header from "../components/Header.astro";
 import Layout from "../layouts/Layout.astro";
 
 // Google Calendar iCal feed for dsa.chapelboro@gmail.com
@@ -62,18 +60,34 @@ try {
   title="Calendar - North Carolina DSA"
   description="Upcoming events, meetings, and actions from the North Carolina Democratic Socialists of America"
 >
-  <main>
-    <section class="hero-small">
+  <main id="main-content">
+    <!-- Page Hero -->
+    <section class="page-hero">
       <div class="container">
         <h1>Upcoming Events</h1>
-        <p>Join us for meetings, actions, social events, and more!</p>
+        <p class="page-hero-sub">
+          Join us for meetings, actions, social events, and more!
+        </p>
       </div>
     </section>
 
     <section class="section">
-      <div class="container">
+      <div class="container container--narrow">
         {fetchError && (
-          <div class="notice">
+          <div class="notice" role="alert">
+            <svg
+              class="notice-icon"
+              width="18"
+              height="18"
+              viewBox="0 0 18 18"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.5"
+              aria-hidden="true"
+            >
+              <circle cx="9" cy="9" r="7.5" />
+              <path d="M9 5.5v4M9 12.5h.01" />
+            </svg>
             <p>
               <strong>Note:</strong> Currently showing sample events. To connect
               a real calendar, update the <code>ICAL_FEED_URL</code> in <code
@@ -95,26 +109,42 @@ try {
            </div>
          )}
 
-        <div class="calendar-info">
+        <div class="calendar-info card card--elevated">
           <h2>Stay Updated</h2>
           <p>Don't miss an event! Here are ways to stay in the loop:</p>
-          <ul>
-            <li>📧 <a href="#contact">Sign up for our email list</a></li>
+          <ul class="info-list">
             <li>
-              🐦 Follow us on <a
-                href="https://twitter.com/ncdsa"
-                target="_blank"
-                rel="noopener"
-              >Twitter</a>
+              <svg
+                class="info-icon"
+                width="16"
+                height="16"
+                viewBox="0 0 16 16"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.5"
+                aria-hidden="true"
+              >
+                <rect x="2" y="3" width="12" height="11" rx="2" />
+                <path d="M2 6h12M5.5 1v3M10.5 1v3" />
+              </svg>
+              <a href="#contact">Sign up for our email list</a>
             </li>
             <li>
-              📘 Like us on <a
-                href="https://www.facebook.com/ncdsa"
-                target="_blank"
-                rel="noopener"
-              >Facebook</a>
+              <svg
+                class="info-icon"
+                width="16"
+                height="16"
+                viewBox="0 0 16 16"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.5"
+                aria-hidden="true"
+              >
+                <circle cx="8" cy="8" r="6" />
+                <path d="M8 4v4l3 2" />
+              </svg>
+              Subscribe to our calendar <em>(coming soon)</em>
             </li>
-            <li>📅 Subscribe to our calendar (coming soon)</li>
           </ul>
         </div>
       </div>
@@ -123,95 +153,120 @@ try {
 </Layout>
 
 <style>
-.hero-small {
+.page-hero {
   background: linear-gradient(
-    135deg,
+    160deg,
     var(--red-primary) 0%,
-    var(--red-dark) 100%
+    var(--red-dark) 50%,
+    var(--red-darker) 100%
   );
   color: var(--white);
-  padding: 4rem 0 3rem;
+  padding: var(--space-3xl) 0;
   text-align: center;
+  position: relative;
+  overflow: hidden;
+  clip-path: polygon(0 0, 100% 0, 100% calc(100% - 30px), 0 100%);
 }
 
-.hero-small h1 {
-  font-size: 2.5rem;
-  margin-bottom: 0.5rem;
+.page-hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    -45deg,
+    transparent,
+    transparent 40px,
+    rgba(0, 0, 0, 0.04) 40px,
+    rgba(0, 0, 0, 0.04) 42px
+  );
+  pointer-events: none;
 }
 
-.hero-small p {
-  font-size: 1.25rem;
-  opacity: 0.95;
+.page-hero h1 {
+  color: var(--white);
+  position: relative;
 }
 
-.section {
-  padding: 4rem 0;
-}
-
-.container {
-  max-width: 900px;
+.page-hero-sub {
+  font-family: var(--font-body);
+  font-size: var(--text-lg);
+  color: rgba(255, 255, 255, 0.9);
+  max-width: 500px;
   margin: 0 auto;
-  padding: 0 2rem;
+  position: relative;
 }
 
 .notice {
-  background: #fff3cd;
-  border: 1px solid #ffc107;
-  border-radius: 8px;
-  padding: 1rem 1.5rem;
-  margin-bottom: 2rem;
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-sm);
+  background: var(--notice-bg);
+  border: 1px solid var(--notice-border);
+  border-radius: var(--radius-md);
+  padding: var(--space-md) var(--space-lg);
+  margin-bottom: var(--space-xl);
+}
+
+.notice-icon {
+  flex-shrink: 0;
+  color: var(--notice-border);
+  margin-top: 2px;
 }
 
 .notice code {
-  background: #ffffff;
-  padding: 2px 6px;
-  border-radius: 3px;
+  background: var(--white);
+  padding: var(--space-3xs) var(--space-xs);
+  border-radius: var(--radius-sm);
   font-size: 0.9em;
 }
 
 .no-events {
   text-align: center;
-  padding: 3rem 0;
-  color: var(--gray-medium);
+  padding: var(--space-3xl) 0;
+  color: var(--text-secondary);
 }
 
 .events-list {
-  margin-bottom: 3rem;
+  margin-bottom: var(--space-2xl);
 }
 
 .calendar-info {
-  background: var(--gray-light);
-  padding: 2rem;
-  border-radius: 8px;
-  margin-top: 3rem;
+  padding: var(--space-xl);
+  margin-top: var(--space-2xl);
 }
 
 .calendar-info h2 {
   color: var(--red-primary);
-  margin-bottom: 1rem;
+  font-size: var(--text-2xl);
+  margin-bottom: var(--space-sm);
 }
 
-.calendar-info ul {
-  margin-top: 1rem;
-  padding-left: 1.5rem;
+.calendar-info p {
+  max-width: none;
 }
 
-.calendar-info li {
-  margin: 0.75rem 0;
-  font-size: 1.1rem;
+.info-list {
+  list-style: none;
+  margin-top: var(--space-md);
+  padding: 0;
+}
+
+.info-list li {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: var(--space-sm) 0;
+  font-size: var(--text-md);
+}
+
+.info-icon {
+  color: var(--red-primary);
+  flex-shrink: 0;
 }
 
 @media (max-width: 768px) {
-  .hero-small {
-    padding: 3rem 0 2rem;
-  }
-
-  .hero-small h1 {
-    font-size: 2rem;
-  }
-
-  .section {
-    padding: 2rem 0;
+  .page-hero {
+    padding: var(--space-2xl) 0;
   }
 }
 </style>

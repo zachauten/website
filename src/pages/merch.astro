@@ -1,8 +1,6 @@
 ---
 export const prerender = true;
 
-import Footer from "../components/Footer.astro";
-import Header from "../components/Header.astro";
 import Layout from "../layouts/Layout.astro";
 ---
 
@@ -10,16 +8,20 @@ import Layout from "../layouts/Layout.astro";
   title="Merch - North Carolina DSA"
   description="Support North Carolina DSA by purchasing official merchandise"
 >
-  <main>
-    <!-- Merch Section -->
-    <section class="section merch-section">
+  <main id="main-content">
+    <!-- Page Hero -->
+    <section class="page-hero">
       <div class="container">
         <h1>DSA Merchandise</h1>
-        <p class="intro-text">
+        <p class="page-hero-sub">
           Support North Carolina DSA by purchasing official merchandise. All
           proceeds help fund our organizing work across the state.
         </p>
+      </div>
+    </section>
 
+    <section class="section">
+      <div class="container">
         <!-- Shopify Buy Button -->
         <div id="collection-component-1770002679393"></div>
       </div>
@@ -142,40 +144,58 @@ import Layout from "../layouts/Layout.astro";
 })();
 /*]]>*/
 </script>
+
 <style>
-.merch-section {
-  padding: 3rem 0;
-  min-height: 60vh;
+.page-hero {
+  background: linear-gradient(
+    160deg,
+    var(--red-primary) 0%,
+    var(--red-dark) 50%,
+    var(--red-darker) 100%
+  );
+  color: var(--white);
+  padding: var(--space-3xl) 0;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  clip-path: polygon(0 0, 100% 0, 100% calc(100% - 30px), 0 100%);
 }
 
-.container {
-  max-width: 1200px;
+.page-hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    -45deg,
+    transparent,
+    transparent 40px,
+    rgba(0, 0, 0, 0.04) 40px,
+    rgba(0, 0, 0, 0.04) 42px
+  );
+  pointer-events: none;
+}
+
+.page-hero h1 {
+  color: var(--white);
+  position: relative;
+}
+
+.page-hero-sub {
+  font-family: var(--font-body);
+  font-size: var(--text-lg);
+  color: rgba(255, 255, 255, 0.9);
+  max-width: 600px;
   margin: 0 auto;
-  padding: 0 1rem;
-}
-
-h1 {
-  color: var(--red-primary);
-  font-size: 2.5rem;
-  margin-bottom: 1rem;
-  text-align: center;
-}
-
-.intro-text {
-  font-size: 1.1rem;
-  text-align: center;
-  margin-bottom: 3rem;
-  color: var(--gray-medium);
-  max-width: 700px;
-  margin-left: auto;
-  margin-right: auto;
+  position: relative;
 }
 
 .section {
-  padding: 4rem 0;
+  min-height: 60vh;
 }
 
-#collection-component-1770002431234 {
-  margin-top: 2rem;
+@media (max-width: 768px) {
+  .page-hero {
+    padding: var(--space-2xl) 0;
+  }
 }
 </style>

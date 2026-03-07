@@ -5,9 +5,18 @@ const { asset, alt } = Astro.props.node;
 
 const url = urlForImage(asset).url();
 const webpUrl = urlForImage(asset).format("webp").url();
+const imgAlt = alt ?? "";
 ---
 
-<picture>
-  <source srcset={webpUrl} type="image/webp" />
-  <img class="responsive__img" src={url} alt={alt} />
-</picture>
+<figure class="portable-image">
+  <picture>
+    <source srcset={webpUrl} type="image/webp" />
+    <img
+      src={url}
+      alt={imgAlt}
+      loading="lazy"
+      decoding="async"
+      style="width: 100%; height: auto; display: block; border-radius: var(--radius-md)"
+    />
+  </picture>
+</figure>

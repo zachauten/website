@@ -45,27 +45,36 @@ const socialMediaItems = await sanityClient.fetch<SocialMedia[]>(
 
 <Layout title="North Carolina DSA - Democratic Socialists of America">
   <Hero title={homepage.hero?.title} subtitle={homepage.hero?.subtitle} />
-  <main>
+  <main id="main-content">
     <!-- About Section -->
-    <section id="about" class="section">
+    <section id="about" class="section section--slant-top">
       <div class="container">
-        <h2>{homepage.about?.heading}</h2>
-        <p>
-          {homepage.about?.paragraph1}
-        </p>
-        <p>
-          {homepage.about?.paragraph2}
-        </p>
+        <div class="about-inner">
+          <h2 class="section-heading">{homepage.about?.heading}</h2>
+          <div class="about-text">
+            <p class="lead-text">
+              {homepage.about?.paragraph1}
+            </p>
+            <p>
+              {homepage.about?.paragraph2}
+            </p>
+          </div>
+        </div>
       </div>
     </section>
 
+    <!-- Program Section -->
     <section class="section bg-light">
       <div class="container">
-        <h2>Our Program</h2>
+        <h2 class="section-heading section-heading--center">Our Program</h2>
         <div class="values-grid">
-          {sortedProgram.map((item) => (
-            <div class="value-card">
-              <h3>{item.icon} {item.title}</h3>
+          {sortedProgram.map((item, i) => (
+            <div
+              class="card card--elevated value-card"
+              style={`animation-delay: ${i * 80}ms`}
+            >
+              <span class="value-icon" aria-hidden="true">{item.icon}</span>
+              <h3 class="value-title">{item.title}</h3>
               <p>{item.description}</p>
             </div>
           ))}
@@ -76,11 +85,14 @@ const socialMediaItems = await sanityClient.fetch<SocialMedia[]>(
     <!-- Campaigns Section -->
     <section id="campaigns" class="section">
       <div class="container">
-        <h2>Our Campaigns</h2>
+        <h2 class="section-heading">Our Campaigns</h2>
         <div class="campaigns-grid">
-          {sortedCampaigns.map((campaign) => (
-            <div class="campaign-card">
-              <h3>{campaign.title}</h3>
+          {sortedCampaigns.map((campaign, i) => (
+            <div
+              class="card card--bordered campaign-card"
+              style={`animation-delay: ${i * 80}ms`}
+            >
+              <h3 class="campaign-title">{campaign.title}</h3>
               <p>{campaign.description}</p>
             </div>
           ))}
@@ -89,42 +101,44 @@ const socialMediaItems = await sanityClient.fetch<SocialMedia[]>(
     </section>
 
     <!-- Join Section -->
-    <section id="join" class="section bg-red">
-      <div class="container">
-        <h2>{homepage.join?.heading}</h2>
+    <section
+      id="join"
+      class="section bg-red section--slant-top section--slant-bottom"
+    >
+      <div class="container join-inner">
+        <h2 class="section-heading section-heading--center">
+          {homepage.join?.heading}
+        </h2>
         <p class="join-text">
           {homepage.join?.text}
         </p>
         <div class="join-buttons">
           <a
             href="https://dsausa.org/join"
-            class="button join-button"
+            class="btn btn--secondary"
             target="_blank"
-            rel="noopener"
+            rel="noopener noreferrer"
           >Join DSA</a>
-          <a href="#contact" class="button contact-button"
-          >Contact NC Chapter</a>
+          <a href="#contact" class="btn btn--outline">Contact NC Chapter</a>
         </div>
-        <p class="dues-info">
-          {homepage.join?.duesInfo}
-        </p>
+        {homepage.join?.duesInfo && (
+          <p class="dues-info">
+            {homepage.join?.duesInfo}
+          </p>
+        )}
       </div>
     </section>
 
     <!-- Events Section -->
-    <section id="events" class="section">
-      <div class="container">
-        <h2>Upcoming Events</h2>
+    <section id="events" class="section section--slant-top">
+      <div class="container events-cta">
+        <h2 class="section-heading section-heading--center">Upcoming Events</h2>
         <p>
           Join us for meetings, actions, social events, and more! Check out our
           <a href="/calendar">full events calendar</a> to see what's happening.
         </p>
-        <div style="text-align: center; margin-top: 2rem">
-          <a
-            href="/calendar"
-            class="button"
-            style="background: var(--red-primary); color: var(--white); padding: 1rem 2rem; border-radius: 4px; font-weight: 600; display: inline-block"
-          >View Calendar</a>
+        <div class="events-btn-wrap">
+          <a href="/calendar" class="btn btn--primary">View Calendar</a>
         </div>
       </div>
     </section>
@@ -132,7 +146,7 @@ const socialMediaItems = await sanityClient.fetch<SocialMedia[]>(
     <!-- Contact Section -->
     <section id="contact" class="section bg-light">
       <div class="container">
-        <h2>Get Involved</h2>
+        <h2 class="section-heading">Get Involved</h2>
         <p>
           Want to learn more or get involved with North Carolina DSA? We'd love
           to hear from you!
@@ -143,13 +157,35 @@ const socialMediaItems = await sanityClient.fetch<SocialMedia[]>(
               || item.url.startsWith("https://");
 
             return (
-              <li>
-                {item.emoji ? `${item.emoji} ` : ""}
-                {item.platform}: <a
-                  href={item.url}
-                  target={isExternal ? "_blank" : undefined}
-                  rel={isExternal ? "noopener" : undefined}
-                >{item.label}</a>
+              <li class="contact-item">
+                <span
+                  class="contact-icon"
+                  aria-hidden="true"
+                >{item.emoji ? item.emoji : "🔗"}</span>
+                <span class="contact-body">
+                  <strong>{item.platform}</strong>
+                  <a
+                    href={item.url}
+                    target={isExternal ? "_blank" : undefined}
+                    rel={isExternal ? "noopener noreferrer" : undefined}
+                  >
+                    {item.label}
+                    {isExternal && (
+                      <svg
+                        class="ext-icon"
+                        width="12"
+                        height="12"
+                        viewBox="0 0 12 12"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="1.5"
+                        aria-hidden="true"
+                      >
+                        <path d="M4.5 1.5H10.5V7.5M10.5 1.5L1.5 10.5" />
+                      </svg>
+                    )}
+                  </a>
+                </span>
               </li>
             );
           })}
@@ -164,139 +200,221 @@ main {
   min-height: 100vh;
 }
 
-h2 {
-  margin: 1rem 0;
+/* --- About --- */
+.about-inner {
+  max-width: var(--max-width-narrow);
 }
 
-.section {
-  padding: 3rem 0 4rem 0;
+.about-text p {
+  font-size: var(--text-md);
+  line-height: 1.75;
+  color: var(--text-secondary);
 }
 
-.container {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 2rem;
+.lead-text {
+  font-size: var(--text-lg);
+  color: var(--text-primary);
+  font-weight: 500;
+  line-height: 1.65;
 }
 
-.bg-light {
-  background: var(--gray-light);
-}
-
-.bg-red {
-  background: var(--red-primary);
-  color: var(--white);
-}
-
-.bg-red h2 {
-  color: var(--white);
-}
-
+/* --- Values / Program Grid --- */
 .values-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 2rem;
-  margin-top: 2rem;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: var(--space-lg);
+  margin-top: var(--space-xl);
 }
 
 .value-card {
-  padding: 1.5rem;
-  background: var(--white);
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  padding: var(--space-xl) var(--space-lg);
+  animation: fadeInUp var(--duration-slow) var(--ease-out) both;
+  border-top: 3px solid var(--red-primary);
+  border-radius: 0 0 var(--radius-md) var(--radius-md);
 }
 
-.value-card h3 {
+.value-icon {
+  font-size: var(--text-3xl);
+  display: block;
+  margin-bottom: var(--space-sm);
+}
+
+.value-title {
   color: var(--red-primary);
-  margin-bottom: 0.5rem;
+  font-size: var(--text-xl);
+  margin-bottom: var(--space-xs);
 }
 
+.value-card p {
+  color: var(--text-secondary);
+  font-size: var(--text-sm);
+  line-height: 1.65;
+  max-width: none;
+  margin: 0 auto;
+}
+
+/* --- Campaigns Grid --- */
 .campaigns-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 2rem;
-  margin-top: 2rem;
+  gap: var(--space-lg);
+  margin-top: var(--space-xl);
 }
 
 .campaign-card {
-  padding: 2rem;
-  border-left: 4px solid var(--red-primary);
-  background: var(--gray-light);
+  padding: var(--space-xl);
+  background: var(--gray-50);
+  animation: slideInRight var(--duration-slow) var(--ease-out) both;
 }
 
-.campaign-card h3 {
+.campaign-title {
   color: var(--red-primary);
-  margin-bottom: 1rem;
+  font-size: var(--text-xl);
+  margin-bottom: var(--space-sm);
+}
+
+.campaign-card p {
+  color: var(--text-secondary);
+  font-size: var(--text-sm);
+  max-width: none;
+}
+
+/* --- Join Section --- */
+.join-inner {
+  text-align: center;
+  max-width: 800px;
+  margin: 0 auto;
 }
 
 .join-text {
-  font-size: 1.1rem;
-  margin-bottom: 2rem;
-  max-width: 800px;
+  font-size: var(--text-md);
+  margin-bottom: var(--space-xl);
+  max-width: 650px;
+  margin-left: auto;
+  margin-right: auto;
+  line-height: 1.7;
+  color: rgba(255, 255, 255, 0.92);
 }
 
 .join-buttons {
   display: flex;
-  gap: 1rem;
-  margin-bottom: 1.5rem;
+  gap: var(--space-md);
+  justify-content: center;
   flex-wrap: wrap;
-}
-
-.join-button {
-  background: var(--white);
-  color: var(--red-primary);
-  padding: 1rem 2rem;
-  border-radius: 4px;
-  font-weight: 600;
-  transition: all 0.3s;
-}
-
-.join-button:hover {
-  background: var(--gray-light);
-  transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  text-decoration: none;
-}
-
-.contact-button {
-  background: transparent;
-  color: var(--white);
-  border: 2px solid var(--white);
-  padding: 1rem 2rem;
-  border-radius: 4px;
-  font-weight: 600;
-  transition: all 0.3s;
-}
-
-.contact-button:hover {
-  background: var(--white);
-  color: var(--red-primary);
-  text-decoration: none;
-  transform: translateY(-2px);
+  margin-bottom: var(--space-lg);
 }
 
 .dues-info {
   font-style: italic;
-  opacity: 0.9;
+  font-size: var(--text-sm);
+  color: rgba(255, 255, 255, 0.8);
+  max-width: none;
 }
 
+/* --- Events CTA --- */
+.events-cta {
+  text-align: center;
+  max-width: var(--max-width-narrow);
+  margin: 0 auto;
+}
+
+.events-cta p {
+  font-size: var(--text-md);
+  color: var(--text-secondary);
+  max-width: none;
+  margin-bottom: var(--space-lg);
+}
+
+.events-btn-wrap {
+  margin-top: var(--space-md);
+}
+
+/* --- Contact --- */
 .contact-list {
   list-style: none;
-  margin-top: 1.5rem;
+  margin-top: var(--space-xl);
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: var(--space-md);
 }
 
-.contact-list li {
-  margin-bottom: 1rem;
-  font-size: 1.1rem;
+.contact-item {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-sm);
+  padding: var(--space-md);
+  background: var(--white);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+  transition:
+    transform var(--duration-fast) var(--ease-out),
+    box-shadow var(--duration-normal) var(--ease-out);
+}
+
+.contact-item:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.contact-icon {
+  font-size: var(--text-xl);
+  flex-shrink: 0;
+  line-height: 1;
+  margin-top: 2px;
+}
+
+.contact-body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3xs);
+  font-size: var(--text-sm);
+}
+
+.contact-body strong {
+  color: var(--text-primary);
+  font-size: var(--text-sm);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  font-weight: 600;
+}
+
+.contact-body a {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2xs);
+}
+
+.ext-icon {
+  opacity: 0.5;
+  flex-shrink: 0;
+}
+
+/* --- Responsive --- */
+@media (max-width: 1024px) {
+  .campaigns-grid {
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  }
 }
 
 @media (max-width: 768px) {
-  .section {
-    padding: 2rem 0;
-  }
-
   .values-grid,
   .campaigns-grid {
     grid-template-columns: 1fr;
+  }
+
+  .contact-list {
+    grid-template-columns: 1fr;
+  }
+
+  .join-buttons {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .join-buttons .btn {
+    width: 100%;
+    max-width: 300px;
   }
 }
 </style>

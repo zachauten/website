@@ -25,115 +25,197 @@ const formatTime = (date: Date) => {
     hour12: true,
   });
 };
+
+// Sanitize description - strip HTML tags to prevent XSS
+const sanitizedDescription = description
+  ? description.replace(/<[^>]*>/g, "")
+  : undefined;
 ---
 
-<div class="event-card">
-  <div class="event-date">
-    <div class="event-month">
+<article class="event-card card card--elevated">
+  <div
+    class="event-date"
+    aria-label={`${start.toLocaleDateString("en-US", { month: "long" })} ${start.getDate()}`}
+  >
+    <span class="event-month">
       {start.toLocaleDateString("en-US", { month: "short" }).toUpperCase()}
-    </div>
-    <div class="event-day">{start.getDate()}</div>
+    </span>
+    <span class="event-day">{start.getDate()}</span>
   </div>
   <div class="event-details">
-    <h3>{title}</h3>
+    <h3 class="event-title">{title}</h3>
     <div class="event-meta">
       <p class="event-time">
-        <strong>📅 {formatDate(start)}</strong><br />
-        ⏰ {formatTime(start)}{end && ` - ${formatTime(end)}`}
+        <svg
+          class="meta-icon"
+          width="16"
+          height="16"
+          viewBox="0 0 16 16"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.5"
+          aria-hidden="true"
+        >
+          <rect x="2" y="2" width="12" height="12" rx="2" />
+          <path d="M5 1v2M11 1v2M2 6h12" />
+        </svg>
+        <span>
+          <strong>{formatDate(start)}</strong><br />
+          <svg
+            class="meta-icon"
+            width="14"
+            height="14"
+            viewBox="0 0 16 16"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.5"
+            aria-hidden="true"
+          >
+            <circle cx="8" cy="8" r="6" />
+            <path d="M8 4v4l3 2" />
+          </svg>
+          {formatTime(start)}{end && ` – ${formatTime(end)}`}
+        </span>
       </p>
-      {location && <p class="event-location">📍 {location}</p>}
+      {location && (
+        <p class="event-location">
+          <svg
+            class="meta-icon"
+            width="14"
+            height="14"
+            viewBox="0 0 16 16"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.5"
+            aria-hidden="true"
+          >
+            <path d="M8 1C5.24 1 3 3.24 3 6c0 4.5 5 9 5 9s5-4.5 5-9c0-2.76-2.24-5-5-5z" />
+            <circle cx="8" cy="6" r="1.5" />
+          </svg>
+          <span>{location}</span>
+        </p>
+      )}
     </div>
-    {description && <p class="event-description" set:html={description} />}
+    {sanitizedDescription && (
+      <p class="event-description">{sanitizedDescription}</p>
+    )}
   </div>
-</div>
+</article>
 
 <style>
 .event-card {
   display: flex;
-  gap: 1.5rem;
-  padding: 1.5rem;
-  background: var(--white);
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  margin-bottom: 1.5rem;
-  transition: transform 0.2s, box-shadow 0.2s;
-}
-
-.event-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  gap: var(--space-lg);
+  padding: var(--space-lg);
+  margin-bottom: var(--space-lg);
 }
 
 .event-date {
   flex-shrink: 0;
   width: 80px;
-  height: 80px;
+  height: 88px;
   background: var(--red-primary);
   color: var(--white);
   text-align: center;
-  border-radius: 8px;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  border-radius: var(--radius-sm);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Subtle diagonal stripe on the badge */
+.event-date::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    -45deg,
+    transparent,
+    transparent 6px,
+    rgba(0, 0, 0, 0.06) 6px,
+    rgba(0, 0, 0, 0.06) 7px
+  );
+  pointer-events: none;
 }
 
 .event-month {
-  font-size: 0.875rem;
+  font-family: var(--font-body);
+  font-size: var(--text-xs);
   font-weight: 600;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  position: relative;
 }
 
 .event-day {
-  font-size: 2rem;
-  font-weight: 700;
+  font-family: var(--font-display);
+  font-size: var(--text-3xl);
   line-height: 1;
+  position: relative;
 }
 
 .event-details {
   flex: 1;
+  min-width: 0;
 }
 
-.event-details h3 {
-  color: var(--red-primary);
-  margin-bottom: 0.75rem;
-  font-size: 1.5rem;
+.event-title {
+  color: var(--text-primary);
+  font-family: var(--font-display);
+  font-size: var(--text-xl);
+  letter-spacing: 0.02em;
+  margin-bottom: var(--space-xs);
 }
 
 .event-meta {
-  margin-bottom: 0.75rem;
+  margin-bottom: var(--space-sm);
+}
+
+.meta-icon {
+  flex-shrink: 0;
+  vertical-align: middle;
+  margin-right: var(--space-2xs);
+  color: var(--gray-400);
 }
 
 .event-time,
 .event-location {
-  margin: 0.5rem 0;
-  color: var(--gray-medium);
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-2xs);
+  margin: var(--space-2xs) 0;
+  color: var(--text-secondary);
+  font-size: var(--text-sm);
+  line-height: 1.5;
 }
 
 .event-description {
-  color: var(--text-primary);
+  color: var(--text-secondary);
+  font-size: var(--text-sm);
   line-height: 1.6;
-  margin-top: 0.75rem;
+  margin-top: var(--space-sm);
   overflow-wrap: break-word;
-  word-wrap: break-word;
-  word-break: break-word;
 }
 
 @media (max-width: 768px) {
   .event-card {
     flex-direction: column;
-    gap: 1rem;
+    gap: var(--space-md);
   }
 
   .event-date {
     width: 100%;
+    height: auto;
     flex-direction: row;
-    gap: 0.5rem;
-    padding: 0.75rem;
+    gap: var(--space-xs);
+    padding: var(--space-sm);
   }
 
   .event-day {
-    font-size: 1.5rem;
+    font-size: var(--text-xl);
   }
 }
 </style>

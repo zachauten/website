@@ -1,10 +1,7 @@
 ---
-import Footer from "../../components/Footer.astro";
-import Header from "../../components/Header.astro";
 import PortableText from "../../components/PortableText.astro";
 import Layout from "../../layouts/Layout.astro";
 import { loadQuery } from "../../sanity/lib/load-query";
-import { type Post } from "../../sanity/schemaTypes/post";
 
 interface PostPage {
   title: string;
@@ -35,24 +32,50 @@ const { data: post } = await loadQuery<PostPage>({
 ---
 
 <Layout title={`${post.title} | North Carolina DSA`}>
-  <main>
-    <section class="section bg-light">
-      <div class="container">
-        <article class="post-card">
-          <h1>{post.title}</h1>
-          {post.publishedAt && (
-            <p class="post-meta">
-              Published {new Date(post.publishedAt).toLocaleDateString()}
-            </p>
-          )}
+  <main id="main-content">
+    <!-- Article Hero -->
+    <section class="article-hero">
+      <div class="container container--narrow">
+        <a href="/leftangles" class="back-link">
+          <svg
+            width="16"
+            height="16"
+            viewBox="0 0 16 16"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            aria-hidden="true"
+          >
+            <path d="M10 2L4 8l6 6" />
+          </svg>
+          All Posts
+        </a>
+        <h1 class="article-title">{post.title}</h1>
+        {post.publishedAt && (
+          <time class="article-date" datetime={post.publishedAt}>
+            {new Date(post.publishedAt).toLocaleDateString("en-US", {
+              year: "numeric",
+              month: "long",
+              day: "numeric",
+            })}
+          </time>
+        )}
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container container--narrow">
+        <article class="article-body">
           {post.mainImage?.asset?.url && (
             <img
-              class="post-image"
+              class="article-image"
               src={post.mainImage.asset.url}
               alt={post.mainImage.alt ?? post.title}
+              loading="eager"
+              decoding="async"
             />
           )}
-          <div class="post-body">
+          <div class="prose">
             <PortableText portableText={post.body} />
           </div>
         </article>
@@ -66,59 +89,204 @@ main {
   min-height: 100vh;
 }
 
-.section {
-  padding: 4rem 0;
+.article-hero {
+  background: linear-gradient(
+    160deg,
+    var(--red-primary) 0%,
+    var(--red-dark) 50%,
+    var(--red-darker) 100%
+  );
+  color: var(--white);
+  padding: var(--space-2xl) 0 var(--space-3xl);
+  position: relative;
+  overflow: hidden;
+  clip-path: polygon(0 0, 100% 0, 100% calc(100% - 30px), 0 100%);
 }
 
-.container {
-  max-width: 900px;
-  margin: 0 auto;
-  padding: 0 2rem;
+.article-hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    -45deg,
+    transparent,
+    transparent 40px,
+    rgba(0, 0, 0, 0.04) 40px,
+    rgba(0, 0, 0, 0.04) 42px
+  );
+  pointer-events: none;
 }
 
-.bg-light {
-  background: var(--gray-light);
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xs);
+  color: rgba(255, 255, 255, 0.8);
+  font-size: var(--text-sm);
+  font-weight: 500;
+  text-decoration: none;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: var(--space-lg);
+  transition: color var(--duration-fast) var(--ease-out);
+  position: relative;
 }
 
-.post-card {
+.back-link:hover {
+  color: var(--white);
+  text-decoration: none;
+}
+
+.article-title {
+  color: var(--white);
+  font-size: clamp(var(--text-2xl), 5vw, var(--text-4xl));
+  line-height: 1;
+  margin-bottom: var(--space-md);
+  position: relative;
+}
+
+.article-date {
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  color: rgba(255, 255, 255, 0.75);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  position: relative;
+}
+
+.article-body {
   background: var(--white);
-  border-left: 4px solid var(--red-primary);
-  padding: 2rem;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  padding: var(--space-2xl);
+  margin-top: calc(-30px + var(--space-md));
+  position: relative;
 }
 
-.post-meta {
-  color: var(--gray-medium);
-  margin-bottom: 1.5rem;
-}
-
-.post-image {
+.article-image {
   width: 100%;
   height: auto;
-  margin-bottom: 1.5rem;
-  border-radius: 4px;
+  margin-bottom: var(--space-xl);
+  border-radius: var(--radius-md);
   display: block;
 }
 
-.post-body :global(p),
-.post-body :global(ul),
-.post-body :global(ol),
-.post-body :global(blockquote) {
-  margin-bottom: 1rem;
+/* --- Prose Typography --- */
+.prose :global(p) {
+  font-size: var(--text-md);
+  line-height: 1.8;
+  color: var(--text-primary);
+  margin-bottom: var(--space-lg);
+  max-width: none;
 }
 
-.post-body :global(h2),
-.post-body :global(h3),
-.post-body :global(h4) {
-  margin-top: 1.5rem;
+.prose :global(h2) {
+  font-family: var(--font-display);
+  font-size: var(--text-2xl);
+  color: var(--text-primary);
+  margin-top: var(--space-2xl);
+  margin-bottom: var(--space-md);
+}
+
+.prose :global(h3) {
+  font-family: var(--font-display);
+  font-size: var(--text-xl);
+  color: var(--text-primary);
+  margin-top: var(--space-xl);
+  margin-bottom: var(--space-sm);
+}
+
+.prose :global(h4) {
+  font-family: var(--font-display);
+  font-size: var(--text-lg);
+  color: var(--text-primary);
+  margin-top: var(--space-xl);
+  margin-bottom: var(--space-sm);
+}
+
+.prose :global(ul),
+.prose :global(ol) {
+  margin-bottom: var(--space-lg);
+  padding-left: var(--space-xl);
+  font-size: var(--text-md);
+  line-height: 1.75;
+}
+
+.prose :global(li) {
+  margin-bottom: var(--space-xs);
+}
+
+.prose :global(blockquote) {
+  border-left: 4px solid var(--red-primary);
+  padding: var(--space-md) var(--space-lg);
+  margin: var(--space-xl) 0;
+  background: var(--gray-50);
+  font-style: italic;
+  font-size: var(--text-md);
+  color: var(--text-secondary);
+  border-radius: 0 var(--radius-md) var(--radius-md) 0;
+}
+
+.prose :global(blockquote p) {
+  margin-bottom: 0;
+}
+
+.prose :global(code) {
+  background: var(--gray-50);
+  padding: var(--space-3xs) var(--space-xs);
+  border-radius: var(--radius-sm);
+  font-size: 0.9em;
+}
+
+.prose :global(pre) {
+  background: var(--gray-900);
+  color: var(--gray-100);
+  padding: var(--space-lg);
+  border-radius: var(--radius-md);
+  overflow-x: auto;
+  margin: var(--space-xl) 0;
+  font-size: var(--text-sm);
+  line-height: 1.6;
+}
+
+.prose :global(pre code) {
+  background: none;
+  padding: 0;
+  font-size: inherit;
+}
+
+.prose :global(a) {
+  color: var(--red-primary);
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 0.15em;
+}
+
+.prose :global(a:hover) {
+  color: var(--red-dark);
+}
+
+.prose :global(img) {
+  border-radius: var(--radius-md);
+  max-width: 100%;
+  height: auto;
+}
+
+.prose :global(hr) {
+  border: none;
+  border-top: 2px solid var(--gray-100);
+  margin: var(--space-2xl) 0;
 }
 
 @media (max-width: 768px) {
-  .section {
-    padding: 2rem 0;
+  .article-body {
+    padding: var(--space-lg);
+    border-radius: var(--radius-md);
   }
 
-  .post-card {
-    padding: 1.5rem;
+  .prose :global(blockquote) {
+    padding: var(--space-sm) var(--space-md);
+    margin: var(--space-lg) 0;
   }
 }
 </style>
